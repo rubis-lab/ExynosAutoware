@@ -1,19 +1,15 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(lgsvl_simulator_bridge)
+project(map_tf_generator)
 
 add_compile_options(-std=c++11)
 
+find_package(autoware_build_flags REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
-  autoware_msgs
-  geometry_msgs
-  roslib
-  rospy
-  rqt_gui
-  rqt_gui_py
-  sensor_msgs
+  pcl_ros
+  roscpp
+  std_msgs
+  tf
 )
-
-catkin_python_setup()
 
 catkin_package()
 
@@ -21,29 +17,21 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-foreach(programs)
-  install(TARGETS ${programs}
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  )
-endforeach()
-
-foreach(dir launch rviz config media resource)
-  install(DIRECTORY ${dir}/
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir}
-  )
-endforeach()
-
-install(PROGRAMS scripts/launch_sim.bash
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+add_executable(
+  map_tf_generator nodes/map_tf_generator.cpp
 )
 
-set(PYTHON_SCRIPTS src/lgsvl_simulator_bridge/__init__.py src/lgsvl_simulator_bridge/configurator.py)
-foreach(scripts ${PYTHON_SCRIPTS})
-  catkin_install_python(PROGRAMS ${scripts}
-    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  )
-endforeach()
+## Specify libraries to link a library or executable target against
+target_link_libraries(
+  map_tf_generator ${catkin_LIBRARIES}
+)
 
-install(FILES plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+install(TARGETS map_tf_generator
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
