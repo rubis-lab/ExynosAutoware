@@ -1,52 +1,56 @@
-cmake_minimum_required(VERSION 2.8.12)
-project(vision_beyond_track)
+cmake_minimum_required(VERSION 2.8.3)
+project(imm_ukf_pda_track)
 
-find_package(OpenCV REQUIRED)
+if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "aarch64")
+  add_definitions(-D__aarch64__)
+endif()
 
 find_package(autoware_build_flags REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
+  amathutils_lib
   autoware_msgs
-  cv_bridge
-  image_transport
+  geometry_msgs
+  pcl_ros
   roscpp
-  sensor_msgs
-  std_msgs
+  roslint
   tf
+  vector_map
+  rubis_lib
 )
 
-catkin_package()
+
+set(CMAKE_CXX_FLAGS "-O2 -Wall ${CMAKE_CXX_FLAGS}")
+
+catkin_package(
+  CATKIN_DEPENDS
+    vector_map
+    amathutils_lib
+)
+
+set(ROSLINT_CPP_OPTS "--filter=-build/c++14")
 
 include_directories(
   include
-  lib
-  ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(
-  beyond_track_lib STATIC
-  lib/hungarian.cpp
-  lib/clipper.cpp
+#imm_ukf_pda
+add_executable(imm_ukf_pda
+  nodes/imm_ukf_pda/imm_ukf_pda_main.cpp
+  nodes/imm_ukf_pda/imm_ukf_pda.cpp
+  nodes/imm_ukf_pda/ukf.cpp
 )
-
-add_executable(vision_beyond_track
-  src/vision_beyond_track_node.cpp
-  src/vision_beyond_track.cpp
-)
-
-target_link_libraries(vision_beyond_track
-  ${OpenCV_LIBS}
+target_link_libraries(imm_ukf_pda
   ${catkin_LIBRARIES}
-  beyond_track_lib
 )
-
-add_dependencies(vision_beyond_track
+add_dependencies(imm_ukf_pda
   ${catkin_EXPORTED_TARGETS}
 )
 
 install(
-  TARGETS beyond_track_lib vision_beyond_track
+  TARGETS
+    imm_ukf_pda
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -56,3 +60,7 @@ install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
   PATTERN ".svn" EXCLUDE
 )
+
+if (CATKIN_ENABLE_TESTING)
+  roslint_add_test()
+endif()

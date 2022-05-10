@@ -1,50 +1,92 @@
-# Beyond Pixels based tracker
+# IMM-UKF-PDA Tracker
 
-This node is based on the work depicted by Beyond Pixels: **Leveraging Geometry and Shape Cues for Online Multi-Object Tracking**.
-Published on the *Proceedings of the IEEE International Conference on Robotics and Automation*.
+Autoware package based on IMM-UKF-PDA tracker.
 
-### How to launch
+* From a sourced terminal:
 
-Example, supposing default topic values. 
+`roslaunch lidar_tracker imm_ukf_pda_tracker.launch`
 
-1. Launch CameraInfo publisher (Sensing Tab -> Calibration Publisher).
 
-1. Launch the Image rectifier (`roslaunch image_processor image_rectifier.launch`).
+* From Runtime Manager:
 
-1. Launch an image based object detector (yolo3, ssd, etc).
+Computing Tab -> Detection/ lidar_detector -> `imm_ukf_pda_tracker`
 
-1. From a sourced terminal:
 
-    - `roslaunch vision_beyond_track vision_beyond_track.launch`
+### Reference
+A. Arya Senna Abdul Rachman, 3D-LIDAR Multi Object Tracking for Autonomous Driving. 2017. [paper](https://repository.tudelft.nl/islandora/object/uuid:f536b829-42ae-41d5-968d-13bbaa4ec736)
 
-or from Runtime Manager:
+M. Schreire, Bayesian environment representation, prediction, and criticality assessment for driver assistance systems. 2017. [paper](https://www.researchgate.net/publication/313463578_Bayesian_environment_representation_prediction_and_criticality_assessment_for_driver_assistance_systems)
 
-Computing Tab -> Detection/ vision_tracker -> `vision_beyond_track`
+### Requirements
+* `eucledian_cluster` node.
+* `ray_ground_filter` node.
+* `/tf` topic. Below video is from Suginami data which contais /tf topic: (`autoware-20180205150908.bag`). You can download it from ROSBAG STORE for free. Otherwise, you need to do localization with a map to produce /tf topic from `velodyne` to `world`.
+* `wayarea` info from vectormap if is possible.
 
 ### Parameters
 
-Launch file available parameters:
+Launch file available parameters for `imm_ukf_pda_tracker`
 
 |Parameter| Type| Description|
 ----------|-----|--------
-|`camera_info_src`|*String* |Camera intrinsics. Default `/camera_info`.|
-|`objects_topic_src`|*String*|Image detections to track. Default `/detection/vision_objects`.|
-|`camera_height`|*Double*|Camera Height in meters. Default `1.2`.|
+|`tracker_input_topic`|*String* |Input topic(type: autoware_msgs::CloudClusterArray). Default `/cloud cluster`.|
+|`tracker_output_topic`|*String*|Output topic(type: autoware_msgs::CloudClusterArray). Default `/tracking_cluster_array`.|
+|`life_time_threshold`|*Int*|The minimum frames for targets to be visualized. Default `8`.|
+|`gating_threshold`|*Double*|The value of gate threshold for measurement validation. Default `9.22`.|
+|`gate_probability`|*Double*|The probability that the gate contains the true measurement. Default `0.99`.|
+|`detection_probability`|*Double*|The probability that a target is detected. Default `0.9`.|
+|`merge_distance_threshold`|*Double*|The distance threshold for associating bounding box over frames. Default `0.5`.|
+|`static_velocity_threshold`|*Double*|The velocity threshold for classifying static/dynamic. Default `0.5`.|
+|`static_num_history_threshold`|*Int*|The amount of frames the velocity is averaged over to compare to `static_velocity_threshold`. Default `3`.|
+|`prevent_explosion_threshold`|*Double*|The threshold for stopping kalman filter update. Default `1000`.|
+|`use_sukf`|*bool*|Use standard kalman filter. Default `false`.|
+
+Launch file available parameters for `visualize_detected_objects`
+
+|Parameter| Type| Description|
+----------|-----|--------
+|`input_topic`|*String* |Input topic(type: autoware_msgs::CloudClusterArray). Default `/tracking_cluster_array`.|
+|`pointcloud frame`|*String*|Pointcloud frame. Default `velodyne`.|
+
 
 ### Subscribed topics
+Node: imm_ukf_pda_tracker
 
 |Topic|Type|Objective|
 ------|----|---------
-|`/camera_info`|`sensor_msgs/CameraInfo`|Camera intrinsics.|
-|`/detection/vision_objects`|`autoware_msgs/DetectedObjectArray`|Obtain the rectangles of the detected objects on image.|
+|`/detection/lidar_objects`|`autoware_msgs::DetectedObjectArray`|Segmented pointcloud from a clustering algorithm like eucledian cluster.|
+|`/tf`|`tf`|Tracking objects in `world` coordinate.|
+
+Node: visualize_detected_objects
+
+|Topic|Type|Objective|
+------|----|---------
+|`/detected_objects`|`autoware_msgs::DetectedObjectArray`|Objects with tracking info.|
 
 ### Published topics
 
+Node: imm_ukf_pda_tracker
+
 |Topic|Type|Objective|
 ------|----|---------
-|`/detection/tracked_objects`|`autoware_msgs::DetectedObjectArray`|Contains the coordinates of the bounding boxes in image coordinates for the successfully tracked objects.|
+|`/detected_objects`|`autoware_msgs::DetectedObjectArray`|Added info like velocity, yaw ,yaw_rate and static/dynamic class to DetectedObject msg.|
+|`/bounding_boxes_tracked`|`jsk_recognition_msgs::BoundingBoxArray`|Visualze bounsing box nicely in rviz by JSK bounding box. Label contains information about static/dynamic class|
+
+Node: visualize_detected_objects
+
+|Topic|Type|Objective|
+------|----|---------
+|`/detected_objects/velocity_arrow`|`visualization_msgs::Marker`|Visualize velocity and yaw of the targets.|
+|`/detected_objects/target_id`|`visualization_msgs::Marker`|Visualize targets' id.|
+
 
 
 ### Video
 
-[![Beyond Autoware](https://img.youtube.com/vi/KFfD3Mkkz4Y/0.jpg)](https://www.youtube.com/watch?v=KFfD3Mkkz4Y)
+[![IMM UKF PDA lidar_tracker Autoware](https://img.youtube.com/vi/tKgDVsIfH-s/0.jpg)](https://youtu.be/tKgDVsIfH-s)
+
+
+### Benchmark
+Please notice that benchmark scripts are in another repository.
+You can tune parameters by using benchmark based on KITTI dataset.
+The repository is [here](https://github.com/cirpue49/kitti_tracking_benchmark).
