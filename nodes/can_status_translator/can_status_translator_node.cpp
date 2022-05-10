@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Autoware Foundation. All rights reserved.
+ * Copyright 2015-2019 Autoware Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,23 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- ********************
- *  v1.0: amc-nu (abrahammonrroy@yahoo.com)
- *
- * range_vision_fusion_node.cpp
- *
- *  Created on: July, 05th, 2018
  */
 
-#include "range_vision_fusion/range_vision_fusion.h"
+// ROS includes
+#include <ros/ros.h>
 
-int main(int argc, char **argv)
+#include "can_status_translator_core.h"
+
+int main(int argc, char** argv)
 {
-  ros::init(argc, argv, __APP_NAME__);
-
-  ROSRangeVisionFusionApp app;
-
-  app.Run();
+  ros::init(argc, argv, "can_status_translator");
+  autoware_connector::CanStatusTranslatorNode n;
+  n.run();
 
   return 0;
 }
