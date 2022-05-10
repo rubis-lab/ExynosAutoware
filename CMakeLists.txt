@@ -1,19 +1,40 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(vehicle_description)
+project(rubis_msgs)
 
 find_package(catkin REQUIRED COMPONENTS
-  xacro
+  geometry_msgs
+  jsk_recognition_msgs
+  message_generation
+  sensor_msgs
+  std_msgs
+  autoware_msgs
 )
 
-catkin_package()
-
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
+add_message_files(
+  DIRECTORY msg
+  FILES
+    PointCloud2.msg
+    PoseStamped.msg
+    TwistStamped.msg
+    VehicleCmd.msg
+    InsStat.msg
 )
 
-foreach(dir launch mesh urdf)
-  install(DIRECTORY ${dir}/
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir}
-  )
-endforeach(dir)
+generate_messages(
+  DEPENDENCIES
+    autoware_msgs
+    geometry_msgs
+    jsk_recognition_msgs
+    sensor_msgs
+    std_msgs
+)
+
+catkin_package(
+  CATKIN_DEPENDS
+    autoware_msgs
+    geometry_msgs
+    jsk_recognition_msgs
+    message_runtime
+    sensor_msgs
+    std_msgs
+)
