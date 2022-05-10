@@ -1,52 +1,27 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(vectacam)
+project(ds4_msgs)
 
-find_package(autoware_build_flags REQUIRED)
+add_compile_options(-std=c++11)
+
 find_package(catkin REQUIRED COMPONENTS
-  cv_bridge
-  image_transport
   message_generation
-  roscpp
   std_msgs
-  tf
+  sensor_msgs
 )
 
-FIND_PACKAGE(OpenCV REQUIRED)
-
-set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
-
-catkin_package()
-
-include_directories(
-  ${catkin_INCLUDE_DIRS}
+add_message_files(
+  DIRECTORY msg
+  FILES
+  DS4.msg
 )
 
-set(CMAKE_CXX_FLAGS "-O2 -Wall ${CMAKE_CXX_FLAGS}")
-
-add_executable(vectacam_node
-  nodes/vectacam/vectacam_node.cpp
-  nodes/vectacam/VectaCam.cpp
+generate_messages(
+  DEPENDENCIES
+  std_msgs
 )
 
-link_directories(
-  ${catkin_LIBRARY_DIRS}
-  ${Boost_LIBRARY_DIRS}
-)
-
-target_link_libraries(vectacam_node
-  ${BOOST_LIBRARIES}
-  ${OpenCV_LIBS}
-  ${catkin_LIBRARIES}
-  -lpthread
-)
-
-install(TARGETS vectacam_node
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY scripts/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
-  PATTERN ".svn" EXCLUDE
+catkin_package(
+  CATKIN_DEPENDS
+  message_runtime
+  std_msgs
 )
