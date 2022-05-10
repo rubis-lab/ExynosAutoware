@@ -1,63 +1,63 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(op_utility)
+project(gnss)
 
-find_package(autoware_build_flags REQUIRED)
-
-find_package(catkin REQUIRED COMPONENTS
-  cmake_modules
-  vector_map_msgs 
-  vector_map_server
+find_package(catkin REQUIRED
+  COMPONENTS
+    roscpp
+    roslint
 )
-
-find_package(TinyXML REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS vector_map_msgs vector_map_server
+  LIBRARIES gnss
 )
-
-###########
-## Build ##
-###########
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
 
-set(UTILITYH_SRC
-  src/DataRW.cpp
-  src/UtilityH.cpp
+add_library(gnss
+  src/geo_pos_conv.cpp
 )
 
-## Declare a cpp library
-add_library(${PROJECT_NAME}
-  ${UTILITYH_SRC}
-)
-
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(gnss
   ${catkin_LIBRARIES}
-  ${TinyXML_LIBRARIES}
 )
+
+file(GLOB_RECURSE ROSLINT_FILES
+  LIST_DIRECTORIES false
+  *.cpp *.h *.hpp
+)
+
+list(APPEND ROSLINT_CPP_OPTS
+  "--extensions=cc,h,hpp,cpp,cu,cuh"
+  "--filter=-build/c++14"
+)
+
+roslint_cpp(${ROSLINT_FILES})
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
+  FILES_MATCHING PATTERN "*.hpp"
 )
 
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS gnss
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-if (CATKIN_ENABLE_TESTING)
+if(CATKIN_ENABLE_TESTING)
+  roslint_add_test()
+
   find_package(rostest REQUIRED)
-  add_rostest_gtest(test-op_utility
-    test/test_op_utility.test
-    test/src/test_op_utility.cpp
+  find_package(rosunit REQUIRED)
+
+  add_rostest_gtest(test_gnss
+    test/test_gnss.test test/test_gnss.cpp
+    src/geo_pos_conv.cpp
   )
-  add_dependencies(test-op_utility ${catkin_EXPORTED_TARGETS})
-  target_link_libraries(test-op_utility ${catkin_LIBRARIES} ${PROJECT_NAME})
-endif ()
+  target_link_libraries(test_gnss ${catkin_LIBRARIES})
+  add_dependencies(test_gnss ${catkin_EXPORTED_TARGETS})
+endif()
