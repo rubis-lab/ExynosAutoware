@@ -1,76 +1,62 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(points_downsampler)
-
-if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "aarch64")
-  add_definitions(-D__aarch64__)
-endif()
+project(image_processor)
 
 find_package(autoware_build_flags REQUIRED)
-
 find_package(catkin REQUIRED COMPONENTS
-  autoware_config_msgs
-  message_generation
-  pcl_conversions
-  pcl_ros
+  cv_bridge
   roscpp
   sensor_msgs
-  velodyne_pointcloud
-  rubis_lib
-  rubis_msgs
 )
 
-add_message_files(
-  FILES
-  PointsDownsamplerInfo.msg
-)
-
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
-
-catkin_package(
-  CATKIN_DEPENDS
-  message_runtime
-  pcl_conversions
-  pcl_ros
+catkin_package(CATKIN_DEPENDS
   sensor_msgs
-  rubis_lib
+  cv_bridge
 )
+
+find_package(OpenCV REQUIRED)
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
+
 SET(CMAKE_CXX_FLAGS "-O2 -g -Wall ${CMAKE_CXX_FLAGS}")
 
-add_executable(voxel_grid_filter nodes/voxel_grid_filter/voxel_grid_filter.cpp)
-add_executable(ring_filter nodes/ring_filter/ring_filter.cpp)
-add_executable(distance_filter nodes/distance_filter/distance_filter.cpp)
-add_executable(random_filter nodes/random_filter/random_filter.cpp)
+#Image rotator
+add_executable(image_rotator
+  nodes/image_rotator/image_rotator_node.cpp
+)
 
-add_dependencies(voxel_grid_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(ring_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(distance_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(random_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_include_directories(image_rotator PRIVATE
+  ${OpenCV_INCLUDE_DIR}
+)
 
-target_link_libraries(voxel_grid_filter ${catkin_LIBRARIES})
-target_link_libraries(ring_filter ${catkin_LIBRARIES})
-target_link_libraries(distance_filter ${catkin_LIBRARIES})
-target_link_libraries(random_filter ${catkin_LIBRARIES})
+target_link_libraries(image_rotator
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+)
 
-install(
-  TARGETS
-    voxel_grid_filter
-    ring_filter
-    distance_filter
-    random_filter
+#Image rectifier
+add_executable(image_rectifier
+  nodes/image_rectifier/image_rectifier_node.cpp
+)
+
+target_include_directories(image_rectifier PRIVATE
+  ${OpenCV_INCLUDE_DIR}
+)
+
+target_link_libraries(image_rectifier
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+)
+
+install(TARGETS image_rotator image_rectifier
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY launch/
+install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
   PATTERN ".svn" EXCLUDE
 )

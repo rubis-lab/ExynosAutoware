@@ -1,31 +1,9 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package points_downsampler
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package image_processor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
-* Feature/update autoware launcher (`#2056 <https://github.com/CPFL/Autoware/issues/2056>`_)
-  * Add prototype of plugin file editor
-  * Change logger level
-  * Support command line options
-  * Update gazebo simulator panel
-  * Add plugin edit tool and update plugins
-  * Fix a bug of transform edit
-  * Fix setup.py to install all packages
-  * Update the code for compatibility with python3
-  * Update the code for colcon build
-  * updated plugin for lane_rule, lane_stop, and voxel_grid_filter
-  * Fix that the plugin_description is not installed
-  * Fix launch file error
-  * Fix test failed
-  * Skip test of unbuilt packages
-  * Add run script
-  * Add profile description
-  * Fix launch file install path of point_downsampler
-  * Update README file
-  * Update README file for plugin file
-  * Fix README file
-  * Add notice to run script
 * [fix] Install commands for all the packages (`#1861 <https://github.com/CPFL/Autoware/issues/1861>`_)
   * Initial fixes to detection, sensing, semantics and utils
   * fixing wrong filename on install command
@@ -58,7 +36,7 @@ Changelog for package points_downsampler
   * Fixed cfg installation path
   * Delete cache on colcon_release
 * Fix license notice in corresponding package.xml
-* Contributors: Abraham Monrroy Cano, amc-nu, isamu-takagi
+* Contributors: Abraham Monrroy Cano, amc-nu
 
 1.10.0 (2019-01-17)
 -------------------
@@ -80,6 +58,7 @@ Changelog for package points_downsampler
   * Update Docker image tags
   * Message packages fixes
   * Fix missing dependency
+* Fix Ros/ROS naming convention
 * Contributors: Esteve Fernandez
 
 1.9.1 (2018-11-06)
@@ -87,8 +66,14 @@ Changelog for package points_downsampler
 
 1.9.0 (2018-10-31)
 ------------------
-* Moved configuration messages to autoware_config_msgs
-* Contributors: Esteve Fernandez
+* [fix] Added option to publish to specific camera frame on camera publisher (`#1565 <https://github.com/CPFL/Autoware/issues/1565>`_)
+  * * Added option to publish to specific camera frame on camera publisher
+  * fixes to the node
+  * Added New line to UI on each param.
+  * * Updates to launch files using calibration publisher
+  * Updated naming after develop merge
+  * Updated suscription type to topic for calibration publisher
+* Contributors: Abraham Monrroy Cano
 
 1.8.0 (2018-08-31)
 ------------------
@@ -198,7 +183,8 @@ Changelog for package points_downsampler
   * * Fixes to README
   * Enable industrial_ci
   * re enable native travis tests
-* Contributors: Abraham Monrroy, Kosuke Murakami
+* Removed flawed subtree
+* Contributors: AMC, Abraham Monrroy, Kosuke Murakami
 
 1.6.3 (2018-03-06)
 ------------------
@@ -215,50 +201,29 @@ Changelog for package points_downsampler
 
 1.6.0 (2017-12-11)
 ------------------
+* Initial release of image processor (`#908 <https://github.com/cpfl/autoware/issues/908>`_)
+  -rotation
+  -rectification
+  nodes included
+* Contributors: Abraham Monrroy
 
 1.5.1 (2017-09-25)
 ------------------
-* Release/1.5.1 (`#816 <https://github.com/cpfl/autoware/issues/816>`_)
-  * fix a build error by gcc version
-  * fix build error for older indigo version
-  * update changelog for v1.5.1
-  * 1.5.1
-* Contributors: Yusuke FUJII
 
 1.5.0 (2017-09-21)
 ------------------
-* Update changelog
-* Contributors: Yusuke FUJII
 
 1.4.0 (2017-08-04)
 ------------------
-* version number must equal current release number so we can start releasing in the future
-* added changelogs
-* Contributors: Dejan Pangercic
 
 1.3.1 (2017-07-16)
 ------------------
 
 1.3.0 (2017-07-14)
 ------------------
-* Modify measurement_range=MAX_MEASUREMENT_RANGE; (200)
-* Add Error handring to removePointsByRange()
-* fix initializing measurement_range
-  https://github.com/CPFL/Autoware/issues/693
-* https://github.com/CPFL/Autoware/issues/693
-* make the commit 14f7eca unavailable.
-* Localization problem patch
-  https://github.com/CPFL/Autoware/issues/693
-* convert to autoware_msgs
-* Contributors: YamatoAndo, andoh104
 
 1.2.0 (2017-06-07)
 ------------------
-* not call removePointsByRange() when measurement_range is 200
-  not compute sqrt
-* add measurement_range
-  refactoring
-* Contributors: yukikitsukawa
 
 1.1.2 (2017-02-27 23:10)
 ------------------------
@@ -268,17 +233,9 @@ Changelog for package points_downsampler
 
 1.1.0 (2017-02-24)
 ------------------
-* add tf_mapping
-  select points_topic in points_downsample.launch
-* Contributors: yukikitsukawa
 
 1.0.1 (2017-01-14)
 ------------------
 
 1.0.0 (2016-12-22)
 ------------------
-* Rename variables.
-* Rename package name.
-  data_filter -> filters
-  points_filter -> points_downsample
-* Contributors: yukikitsukawa
