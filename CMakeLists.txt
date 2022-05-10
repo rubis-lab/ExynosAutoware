@@ -1,27 +1,20 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ds4_msgs)
-
-add_compile_options(-std=c++11)
+project(ds4_driver)
 
 find_package(catkin REQUIRED COMPONENTS
-  message_generation
-  std_msgs
   sensor_msgs
-)
-
-add_message_files(
-  DIRECTORY msg
-  FILES
-  DS4.msg
-)
-
-generate_messages(
-  DEPENDENCIES
-  std_msgs
 )
 
 catkin_package(
   CATKIN_DEPENDS
-  message_runtime
-  std_msgs
+  sensor_msgs
 )
+
+catkin_install_python(PROGRAMS
+        node/ds4_driver
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY launch/
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+        PATTERN ".svn" EXCLUDE)
