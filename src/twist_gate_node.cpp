@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-#include "twist_filter/twist_filter_node.h"
+// ROS Includes
+#include <ros/ros.h>
 
-extern unsigned long rubis::instance_;
+// User defined includes
+#include "twist_gate/twist_gate.h"
+#include <rubis_lib/sched.hpp>
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "twist_filter");
-  twist_filter_node::TwistFilterNode node;
+  ros::init(argc, argv, "twist_gate");
+
+  ros::NodeHandle nh;
+  ros::NodeHandle private_nh("~");
 
   // Scheduling Setup
   int task_scheduling_flag;
@@ -32,17 +37,19 @@ int main(int argc, char** argv)
   double task_execution_time;
   double task_relative_deadline;
 
-  ros::NodeHandle private_nh("~");
-  private_nh.param<int>("/twist_filter/task_scheduling_flag", task_scheduling_flag, 0);
-  private_nh.param<int>("/twist_filter/task_profiling_flag", task_profiling_flag, 0);
-  private_nh.param<std::string>("/twist_filter/task_response_time_filename", task_response_time_filename, "~/Documents/profiling/response_time/twist_filter.csv");
-  private_nh.param<int>("/twist_filter/rate", rate, 10);
-  private_nh.param("/twist_filter/task_minimum_inter_release_time", task_minimum_inter_release_time, (double)10);
-  private_nh.param("/twist_filter/task_execution_time", task_execution_time, (double)10);
-  private_nh.param("/twist_filter/task_relative_deadline", task_relative_deadline, (double)10);
+  private_nh.param<int>("/twist_gate/task_scheduling_flag", task_scheduling_flag, 0);
+  private_nh.param<int>("/twist_gate/task_profiling_flag", task_profiling_flag, 0);
+  private_nh.param<std::string>("/twist_gate/task_response_time_filename", task_response_time_filename, "~/Documents/profiling/response_time/twist_gate.csv");
+  private_nh.param<int>("/twist_gate/rate", rate, 10);
+  private_nh.param("/twist_gate/task_minimum_inter_release_time", task_minimum_inter_release_time, (double)10);
+  private_nh.param("/twist_gate/task_execution_time", task_execution_time, (double)10);
+  private_nh.param("/twist_gate/task_relative_deadline", task_relative_deadline, (double)10);
+  private_nh.param<int>("/twist_gate/zero_flag", zero_flag_, 0);
+
+  TwistGate twist_gate(nh, private_nh);
 
   if(task_profiling_flag) rubis::sched::init_task_profiling(task_response_time_filename);
-  
+
   if(!task_scheduling_flag && !task_profiling_flag){
     ros::spin();
   }
@@ -66,9 +73,7 @@ int main(int argc, char** argv)
 
       ros::spinOnce();
 
-      if(task_profiling_flag){
-        rubis::sched::stop_task_profiling(rubis::instance_, rubis::sched::task_state_);
-      }
+      if(task_profiling_flag) rubis::sched::stop_task_profiling(rubis::instance_, rubis::sched::task_state_);
 
       if(rubis::sched::task_state_ == TASK_STATE_DONE){
         if(task_scheduling_flag) rubis::sched::yield_task_scheduling();
@@ -78,6 +83,6 @@ int main(int argc, char** argv)
       r.sleep();
     }
   }
-  
+
   return 0;
 }
