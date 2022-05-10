@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(can_data_msgs)
+project(autoware_can_msgs)
 
-find_package(catkin REQUIRED
-  COMPONENTS
-    message_generation
-    std_msgs
+find_package(catkin REQUIRED COMPONENTS
+  message_generation
+  std_msgs
 )
 
 add_message_files(
   DIRECTORY msg
   FILES
-    Car_ctrl_output.msg
-    Car_ctrl_input.msg
+    CANData.msg
+    CANInfo.msg
+    CANPacket.msg
 )
 
 generate_messages(
