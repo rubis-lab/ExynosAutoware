@@ -1,25 +1,16 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>object_map</name>
+  <name>ros_observer</name>
   <version>1.12.0</version>
-  <description>The object_map package</description>
-  <maintainer email="antm678@ertl.jp">ando</maintainer>
-  <maintainer email="abrahammonrroy@yahoo.com">amc</maintainer>
+  <description>The ros_observer package</description>
+  <author email="shingo.takeuchi.2@tier4.jp">Shingo Takeuchi</author>
+  <maintainer email="shingo.takeuchi.2@tier4.jp">Shingo Takeuchi</maintainer>
   <license>Apache 2</license>
-
-  <buildtool_depend>autoware_build_flags</buildtool_depend>
   <buildtool_depend>catkin</buildtool_depend>
-
-  <depend>autoware_msgs</depend>
-  <depend>grid_map_cv</depend>
-  <depend>grid_map_msgs</depend>
-  <depend>grid_map_ros</depend>
-  <depend>nav_msgs</depend>
-  <depend>pcl_conversions</depend>
-  <depend>pcl_ros</depend>
-  <depend>qtbase5-dev</depend>
-  <depend>sensor_msgs</depend>
-  <depend>tf</depend>
-  <depend>vector_map</depend>
-  <depend>libopencv-dev</depend>
+  <build_depend>rostest</build_depend>
+  <depend>roscpp</depend>
+  <depend>boost</depend>
+  <depend>roslint</depend>
+  <export>
+  </export>
 </package>

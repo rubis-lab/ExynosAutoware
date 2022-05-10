@@ -1,161 +1,89 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 2.8.3)
+project(ros_observer)
 
-project(object_map)
+add_compile_options(-std=c++11)
 
-find_package(autoware_build_flags REQUIRED)
-
-find_package(catkin REQUIRED COMPONENTS
-  autoware_msgs
-  grid_map_cv
-  grid_map_msgs
-  grid_map_ros
-  nav_msgs
-  pcl_conversions
-  pcl_ros
+find_package(
+  catkin REQUIRED COMPONENTS
   roscpp
   roslint
-  sensor_msgs
-  tf
-  vector_map
 )
 
-# TODO add other files into roslint
-set(ROSLINT_CPP_OPTS "--filter=-build/c++14")
+find_package(Boost REQUIRED COMPONENTS
+  thread
+)
 
-find_package(Qt5Core REQUIRED)
-find_package(OpenCV REQUIRED)
-find_package(PCL REQUIRED)
-find_package(OpenMP)
-
-if (OPENMP_FOUND)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif ()
+set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
+roslint_cpp()
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES object_map_utils_lib
-  CATKIN_DEPENDS
-    pcl_ros
-    pcl_conversions
-    tf
-    sensor_msgs
-    nav_msgs
-    autoware_msgs
-    grid_map_msgs
-    vector_map
+  LIBRARIES lib_ros_observer
 )
-
-set(CMAKE_CXX_FLAGS "-O2 -g -Wall ${CMAKE_CXX_FLAGS}")
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
-### object_map_utils ###
-add_library(object_map_utils_lib
-  include/object_map/object_map_utils.cpp
-  include/object_map/object_map_utils.hpp
-)
-target_link_libraries(object_map_utils_lib
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBS}
+
+add_executable(
+  ros_observer
+  src/ros_observer.cpp
 )
 
-### laserscan2costmap ###
-add_executable(laserscan2costmap
-  nodes/laserscan2costmap/laserscan2costmap.cpp
+target_link_libraries(
+  ros_observer
+  rt ${Boost_LIBRARIES}
 )
 
-target_link_libraries(laserscan2costmap
-  ${catkin_LIBRARIES}
-)
-
-
-### potential_field ###
-add_executable(potential_field
-  nodes/potential_field/potential_field.cpp
-)
-add_dependencies(potential_field
+add_dependencies(
+  ros_observer
   ${catkin_EXPORTED_TARGETS}
 )
-target_link_libraries(potential_field
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBS}
+
+add_library(
+  lib_ros_observer
+  lib/lib_ros_observer.cpp
 )
 
-### grid_map_filter ###
-add_library(grid_map_filter_lib
-  nodes/grid_map_filter/grid_map_filter.h
-  include/object_map/object_map_utils.hpp
-  nodes/grid_map_filter/grid_map_filter.cpp
-)
-target_link_libraries(grid_map_filter_lib
+target_link_libraries(
+  lib_ros_observer
   ${catkin_LIBRARIES}
-  ${OpenCV_LIBS}
-  object_map_utils_lib
-)
-add_executable(grid_map_filter
-  nodes/grid_map_filter/grid_map_filter_node.cpp
-  nodes/grid_map_filter/grid_map_filter.h
-)
-target_link_libraries(grid_map_filter
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBS}
-  object_map_utils_lib
-  grid_map_filter_lib
+  rt
+  ${Boost_LIBRARIES}
 )
 
-### wayarea2grid ###
-add_library(wayarea2grid_lib
-  nodes/wayarea2grid/wayarea2grid.h
-  include/object_map/object_map_utils.hpp
-  nodes/wayarea2grid/wayarea2grid.cpp
-)
-target_link_libraries(wayarea2grid_lib
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBS}
-  object_map_utils_lib
+add_dependencies(
+  lib_ros_observer
+  ${catkin_EXPORTED_TARGETS}
 )
 
-add_executable(wayarea2grid
-  nodes/wayarea2grid/wayarea2grid.h
-  nodes/wayarea2grid/wayarea2grid_node.cpp
+# include header files
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
-target_link_libraries(wayarea2grid
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBS}
-  wayarea2grid_lib
-)
-      
-install(
-  TARGETS
-    wayarea2grid
-    wayarea2grid_lib
-    grid_map_filter_lib
-    grid_map_filter
-    potential_field
-    laserscan2costmap
-    object_map_utils_lib
+# Install library
+install(TARGETS ros_observer lib_ros_observer
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
+# Install launch
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
-)
-        
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.hpp"
-)
-
-install(DIRECTORY config/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
 )
 
 if (CATKIN_ENABLE_TESTING)
   roslint_add_test()
+  find_package(rostest REQUIRED)
+  add_rostest_gtest(test_ros_observer
+    test/test_ros_observer.test
+    test/src/test_ros_observer.cpp
+  )
+  target_link_libraries(test_ros_observer
+    lib_ros_observer
+    ${catkin_LIBRARIES}
+  )
 endif()
