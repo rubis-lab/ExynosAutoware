@@ -1,11 +1,42 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package registration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package ndt_tku
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
+* [fix] Install commands for all the packages (`#1861 <https://github.com/CPFL/Autoware/issues/1861>`_)
+  * Initial fixes to detection, sensing, semantics and utils
+  * fixing wrong filename on install command
+  * Fixes to install commands
+  * Hokuyo fix name
+  * Fix obj db
+  * Obj db include fixes
+  * End of final cleaning sweep
+  * Incorrect command order in runtime manager
+  * Param tempfile not required by runtime_manager
+  * * Fixes to runtime manager install commands
+  * Remove devel directory from catkin, if any
+  * Updated launch files for robosense
+  * Updated robosense
+  * Fix/add missing install (`#1977 <https://github.com/CPFL/Autoware/issues/1977>`_)
+  * Added launch install to lidar_kf_contour_track
+  * Added install to op_global_planner
+  * Added install to way_planner
+  * Added install to op_local_planner
+  * Added install to op_simulation_package
+  * Added install to op_utilities
+  * Added install to sync
+  * * Improved installation script for pointgrey packages
+  * Fixed nodelet error for gmsl cameras
+  * USe install space in catkin as well
+  * add install to catkin
+  * Fix install directives (`#1990 <https://github.com/CPFL/Autoware/issues/1990>`_)
+  * Fixed installation path
+  * Fixed params installation path
+  * Fixed cfg installation path
+  * Delete cache on colcon_release
 * Fix license notice in corresponding package.xml
-* Contributors: amc-nu
+* Contributors: Abraham Monrroy Cano, amc-nu
 
 1.10.0 (2019-01-17)
 -------------------
@@ -18,6 +49,8 @@ Changelog for package registration
 
 1.8.0 (2018-08-31)
 ------------------
+* [Feature] Makes sure that all binaries have their dependencies linked (`#1385 <https://github.com/CPFL/Autoware/pull/1385>`_)
+* Contributors: Esteve Fernandez
 
 1.7.0 (2018-05-18)
 ------------------
@@ -120,6 +153,39 @@ Changelog for package registration
   * * Fixes to README
   * Enable industrial_ci
   * re enable native travis tests
+* Fix/cmake cleanup (`#1156 <https://github.com/CPFL/Autoware/pull/1156>`_)
+  * Initial Cleanup
+  * fixed also for indigo
+  * kf cjeck
+  * Fix road wizard
+  * Added travis ci
+  * Trigger CI
+  * Fixes to cv_tracker and lidar_tracker cmake
+  * Fix kitti player dependencies
+  * Removed unnecessary dependencies
+  * messages fixing for can
+  * Update build script travis
+  * Travis Path
+  * Travis Paths fix
+  * Travis test
+  * Eigen checks
+  * removed unnecessary dependencies
+  * Eigen Detection
+  * Job number reduced
+  * Eigen3 more fixes
+  * More Eigen3
+  * Even more Eigen
+  * find package cmake modules included
+  * More fixes to cmake modules
+  * Removed non ros dependency
+  * Enable industrial_ci for indidog and kinetic
+  * Wrong install command
+  * fix rviz_plugin install
+  * FastVirtualScan fix
+  * Fix Qt5 Fastvirtualscan
+  * Fixed qt5 system dependencies for rosdep
+  * NDT TKU Fix catkin not pacakged
+  * Fixes from industrial_ci
 * Contributors: Abraham Monrroy, Kosuke Murakami
 
 1.6.3 (2018-03-06)
@@ -138,7 +204,8 @@ Changelog for package registration
 1.6.0 (2017-12-11)
 ------------------
 * Prepare release for 1.6.0
-* Contributors: Yamato ANDO
+* change specification according PCL ver.
+* Contributors: Akihito Ohsato, Yamato ANDO
 
 1.5.1 (2017-09-25)
 ------------------
@@ -168,13 +235,9 @@ Changelog for package registration
 
 1.2.0 (2017-06-07)
 ------------------
-* ROS Kinectic Upgrade tested on Ubuntu 16.04 and OpenCV 3.2.0
-  Modules not included:
-  -orb_localizer
-  -dpm_ocv node and lib
-  Everything else working
-  Added some libraries for Gazebo on src/extras
-* Contributors: amc-nu
+* Fixed compatibility issues with indigo
+* Update for kinetic
+* Contributors: Yukihiro Saito, Yusuke FUJII
 
 1.1.2 (2017-02-27 23:10)
 ------------------------
@@ -190,13 +253,5 @@ Changelog for package registration
 
 1.0.0 (2016-12-22)
 ------------------
-* Fix ndt_mapping
-  Improve CMakeLists.txt
-* Updated fast_pcl
-* Switch use_openmp true/false in ndt_matching.launch
-* Prallelized ndt_matching
-* Use fast_pcl only when pcl 1.7.2 or higher version is installed
-  pcl package of Ubuntu 14.04 is version 1.7.1 and some header files
-  which are included in fast_pcl are missed in pcl 1.7.1.
-* Add fast_pcl library.
-* Contributors: Syohei YOSHIDA, Yukihiro Saito, yukikitsukawa
+* add ndt_tku library
+* Contributors: yukikitsukawa

@@ -1,67 +1,39 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(pcl_omp_registration)
+project(ndt_tku)
 
-find_package(catkin REQUIRED COMPONENTS)
-find_package(PCL REQUIRED)
+find_package(catkin REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES pcl_omp_registration
+  LIBRARIES ndt_tku
 )
 
-find_package(Eigen3 QUIET)
+find_package(GLUT REQUIRED)
 
-if(NOT EIGEN3_FOUND)
-  # Fallback to cmake_modules
-  find_package(cmake_modules REQUIRED)
-  find_package(Eigen REQUIRED)
-  set(EIGEN3_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
-  set(EIGEN3_LIBRARIES ${EIGEN_LIBRARIES})  # Not strictly necessary as Eigen is head only
-  # Possibly map additional variables to the EIGEN3_ prefix.
-else()
-  set(EIGEN3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
-endif()
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+  ${GLUT_INCLUDE_DIRS}
+)
 
-if(PCL_VERSION VERSION_LESS "1.7.2")
-  message("pcl_omp requires PCL 1.7.2 or higher versions")
-else()
-  set(srcs src/ndt.cpp)
+add_library(ndt_tku
+  src/algebra.cpp
+  src/newton.cpp
+  src/manage_ND.cpp
+)
 
-  set(incs
-    include/pcl_omp_registration/ndt.h
-    include/pcl_omp_registration/registration.h
-  )
+target_link_libraries(ndt_tku
+  ${catkin_LIBRARIES}
+  ${GLUT_LIBRARIES}
+)
 
-  set(impl_incs
-    include/pcl_omp_registration/impl/ndt.hpp
-    include/pcl_omp_registration/impl/registration.hpp
-  )
+install(TARGETS ndt_tku
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
-  include_directories(
-    include
-    ${PCL_INCLUDE_DIRS}
-    ${EIGEN3_INCLUDE_DIRS}
-  )
-
-  add_library(pcl_omp_registration
-    ${srcs}
-    ${incs}
-    ${impl_incs}
-  )
-
-  target_link_libraries(pcl_omp_registration
-    ${PCL_LIBRARIES}
-    ${EIGEN3_LIBRARIES}
-  )
-
-  install(DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  )
-
-
-  install(TARGETS pcl_omp_registration
-    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  )
-endif()
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  PATTERN ".svn" EXCLUDE
+)
