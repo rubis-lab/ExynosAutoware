@@ -1,28 +1,77 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package adi_driver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package autoware_driveworks_interface
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
+* [fix] Install commands for all the packages (`#1861 <https://github.com/CPFL/Autoware/issues/1861>`_)
+  * Initial fixes to detection, sensing, semantics and utils
+  * fixing wrong filename on install command
+  * Fixes to install commands
+  * Hokuyo fix name
+  * Fix obj db
+  * Obj db include fixes
+  * End of final cleaning sweep
+  * Incorrect command order in runtime manager
+  * Param tempfile not required by runtime_manager
+  * * Fixes to runtime manager install commands
+  * Remove devel directory from catkin, if any
+  * Updated launch files for robosense
+  * Updated robosense
+  * Fix/add missing install (`#1977 <https://github.com/CPFL/Autoware/issues/1977>`_)
+  * Added launch install to lidar_kf_contour_track
+  * Added install to op_global_planner
+  * Added install to way_planner
+  * Added install to op_local_planner
+  * Added install to op_simulation_package
+  * Added install to op_utilities
+  * Added install to sync
+  * * Improved installation script for pointgrey packages
+  * Fixed nodelet error for gmsl cameras
+  * USe install space in catkin as well
+  * add install to catkin
+  * Fix install directives (`#1990 <https://github.com/CPFL/Autoware/issues/1990>`_)
+  * Fixed installation path
+  * Fixed params installation path
+  * Fixed cfg installation path
+  * Delete cache on colcon_release
+* Fix license notice in corresponding package.xml
+* Contributors: Abraham Monrroy Cano, amc-nu
 
 1.10.0 (2019-01-17)
 -------------------
+* Use colcon as the build tool (`#1704 <https://github.com/CPFL/Autoware/issues/1704>`_)
+  * Switch to colcon as the build tool instead of catkin
+  * Added cmake-target
+  * Added note about the second colcon call
+  * Added warning about catkin* scripts being deprecated
+  * Fix COLCON_OPTS
+  * Added install targets
+  * Update Docker image tags
+  * Message packages fixes
+  * Fix missing dependency
+* Contributors: Esteve Fernandez
 
 1.9.1 (2018-11-06)
 ------------------
 
 1.9.0 (2018-10-31)
 ------------------
+* Use stubs for the CUDA libraries. Ignore undefined symbols errors in autoware_driveworks_interface. Support Docker volumes for CUDA, Driveworks and TensorRT.
+* Contributors: Esteve Fernandez
 
 1.8.0 (2018-08-31)
 ------------------
+* [Feature] Cross compile for NVIDIA DriveWorks (`#1447 <https://github.com/CPFL/Autoware/pull/1447>`_)
+* [Fix] Moved C++11 flag to autoware_build_flags (`#1395 <https://github.com/CPFL/Autoware/pull/1395>`_)
+* [Feature] Makes sure that all binaries have their dependencies linked (`#1385 <https://github.com/CPFL/Autoware/pull/1385>`_)
+* [Feature] Cross compile Autoware for aarch64 (`#1375 <https://github.com/CPFL/Autoware/pull/1375>`_)
 * [Fix] Extend and Update interface.yaml (`#1291 <https://github.com/CPFL/Autoware/pull/1291>`_)
-* Contributors: Kenji Funaoka
+* Contributors: Esteve Fernandez, Kenji Funaoka
 
 1.7.0 (2018-05-18)
 ------------------
 * update Version from 1.6.3 to 1.7.0 in package.xml and CHANGELOG.rst
-* Modify package xml version other than 1.6.3
 * [fix] Fixes for all packages and dependencies (`#1240 <https://github.com/CPFL/Autoware/pull/1240>`_)
   * Initial Cleanup
   * fixed also for indigo
@@ -121,58 +170,59 @@ Changelog for package adi_driver
   * * Fixes to README
   * Enable industrial_ci
   * re enable native travis tests
-* Added README on how to use subtree
-* adi_driver subtree added
-* Contributors: Abraham Monrroy, Kosuke Murakami, amc-nu, yukikitsukawa
+* add gmsl button to runtime manager
+* update version description
+* add to support driveworks feature
+* Contributors: Abraham Monrroy, Kosuke Murakami, Yusuke FUJII
 
-1.0.1 (2018-02-02)
+1.6.3 (2018-03-06)
 ------------------
-* fix deb path (`#8 <https://github.com/tork-a/adi_driver/issues/8>`_)
-* workaround for run_tests on installed space (`#7 <https://github.com/tork-a/adi_driver/issues/7>`_)
-  * enable deb build
-  * add rosdoc.yaml
-  * add .github_release.sh
-  * Change photo of the sensor
-  * Add author to package.xml (`#5 <https://github.com/tork-a/adi_driver/issues/5>`_)
-  * Add urdf to install (`#5 <https://github.com/tork-a/adi_driver/issues/5>`_)
-  * add roslaunch-check with_rviz:=true with_plot:=true
-  * install test directory
-  * workaround for run_tests on installed space
-* Add adxl345 descrption into README.md (`#4 <https://github.com/tork-a/adi_driver/issues/4>`_)
-* Contributors: Ryosuke Tajima, Tokyo Opensource Robotics Developer 534
+* Fix autoware_driveworks image
+* Contributors: Yusuke FUJII
 
-1.0.0 (2018-01-21)
+1.6.2 (2018-02-27)
 ------------------
-* note that you need to restart after addgroup (`#3 <https://github.com/tork-a/adi_driver/issues/3>`_)
-* Add publish_tf argument for launch file
-* Change to load model only if use rviz
-* Update index.rst
-* Fix schematics, add documents
-  - Schematics of ADIS16470 cable was wrong
-  - Add ADXL345 cable schematics
-* Add docbuild (`#2 <https://github.com/tork-a/adi_driver/issues/2>`_)
-  * add circle.yml
-  * add docbuild command to CMakeLists.txt
-  * Update index.rst contents
-  * Put travis badge.
-* Contributors: Ryosuke Tajima, Tokyo Opensource Robotics Developer 534, Y. Suzuki
+* Update CHANGELOG
+* add gmsl button to runtime manager
+* update version description
+* add to support driveworks feature
+* Contributors: Yusuke FUJII
 
-0.0.1 (2017-12-14)
+1.6.1 (2018-01-20)
 ------------------
-* Add doc/index.rst
-* Fix build errors
-* Remove all error of roslint
-* Add roslint settings
-* Adjust header inclusion
-* Add loop rate parameter
-* Refactor adis16470 code
-* Add and change copyrights
-* Change copyright representation
-* Change test more practical
-* add .travis.yml (`#1 <https://github.com/7675t/adi_driver/issues/1>`)
-* add xacro to pakcage.xml
-* add rviz, imu_filter_madgwick to pakcage.xml
-* fix layout in package.xml
-* add rqt_plot to package.xml
-* add .travis.yml, using generate_prerelease_script.py
-* Contributors: Ryosuke Tajima, Tokyo Opensource Robotics Developer 534
+
+1.6.0 (2017-12-11)
+------------------
+
+1.5.1 (2017-09-25)
+------------------
+
+1.5.0 (2017-09-21)
+------------------
+
+1.4.0 (2017-08-04)
+------------------
+
+1.3.1 (2017-07-16)
+------------------
+
+1.3.0 (2017-07-14)
+------------------
+
+1.2.0 (2017-06-07)
+------------------
+
+1.1.2 (2017-02-27 23:10)
+------------------------
+
+1.1.1 (2017-02-27 22:25)
+------------------------
+
+1.1.0 (2017-02-24)
+------------------
+
+1.0.1 (2017-01-14)
+------------------
+
+1.0.0 (2016-12-22)
+------------------

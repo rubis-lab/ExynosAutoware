@@ -1,4 +1,6 @@
-- name: /imu
-  publish: [/data_raw]
-- name: /adxl345_node
-  publish: [/data_raw]
+- name: /gmsl_camera_interface
+  publish: [/image_raw]
+  subscribe: []
+- name: /driveworks_tensorrt_interface
+  publish: [/obj_car/image_obj]
+  subscribe: [/image_raw]

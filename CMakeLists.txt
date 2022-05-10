@@ -1,90 +1,122 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(adi_driver)
+project(autoware_driveworks_interface)
+
+set(CMAKE_CXX_FLAGS "-O2 -s  -Wno-error=unused-parameter")
+
+find_package(autoware_build_flags REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
+  autoware_msgs
   roscpp
-  roslint
   sensor_msgs
+  std_msgs
 )
 
-catkin_package()
+find_package(CUDA)
 
-include_directories(include ${catkin_INCLUDE_DIRS})
-
-add_executable(adis16470_node src/adis16470_node.cpp src/adis16470.cpp)
-target_link_libraries(adis16470_node ${catkin_LIBRARIES})
-
-add_executable(adxl345_node src/adxl345_node.cpp src/adxl345.cpp)
-target_link_libraries(adxl345_node ${catkin_LIBRARIES})
-
-install(TARGETS adis16470_node adxl345_node
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+catkin_package(
+  CATKIN_DEPENDS
+    autoware_msgs
+    sensor_msgs
+    std_msgs
 )
+find_library(DRIVEWORKS_FOUND NAMES driveworks)
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
+if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "aarch64"
+  AND CUDA_FOUND
+  AND DRIVEWORKS_FOUND
 )
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(DRIVEWORKS_LINKER_FLAGS "-Wl,--unresolved-symbols=ignore-in-object-files -Wl,--allow-shlib-undefined")
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(DRIVEWORKS_LINKER_FLAGS "-Wl,-undefined,dynamic_lookup")
+  endif()
 
-install(DIRECTORY launch test urdf
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-  USE_SOURCE_PERMISSIONS
-)
+  find_package(Threads REQUIRED)
+  find_package(OpenCV REQUIRED)
 
-roslint_cpp()
+  find_package(catkin REQUIRED COMPONENTS
+    cv_bridge
+    roscpp
+    sensor_msgs
+    std_msgs
+    tf
+  )
 
-# debbuild
-# catkin build minas_control --make-args debbuild
-# ROS_PARALLEL_JOBS='' catkin_make --pkg ${PROJECT_NAME} -- debbuild
-add_custom_target(debbuild_${PROJECT_NAME}
-  COMMAND sudo -n true || (>&2 echo "debbuild need sudo access to make debs" && exit 1)
-  COMMAND bloom-generate rosdebian --os-name ubuntu --os-version trusty --ros-distro indigo
-  COMMAND MAKEFLAGS= fakeroot debian/rules binary
-  COMMAND find debian obj-x86_64-linux-gnu -type f -not -name postinst -print0 | xargs -0 rm --
-  COMMAND find debian obj-x86_64-linux-gnu -type d -empty -delete
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-)
+  include_directories(
+    include
+    ${catkin_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
+    ${OpenCV_INCLUDE_DIRS}
+  )
 
-# make docs
-# ROS_PARALLEL_JOBS='' catkin_make --pkg adi_driver -- docbuild_adi_driver
-add_custom_target(docbuild_${PROJECT_NAME}
-  COMMAND cmake -E remove_directory output
-  COMMAND cmake -E make_directory output
-  COMMAND sphinx-build -b latex doc output
-  #COMMAND cmake -E chdir output sh -c 'ls *.png | xargs extractbb'
-  COMMAND cd output \\; ls *.png | xargs extractbb
-  COMMAND sed -i 's@\\\\setcounter{tocdepth}{0}@@' output/${PROJECT_NAME}.tex
-  ## change layout, chapter to section, section to subsection
-  COMMAND sed -i 's@\\\\chapter{[0-9. ]*@\\\\chapter{@' output/${PROJECT_NAME}.tex
-  COMMAND sed -i 's@\\\\section{[0-9. ]*@\\\\section{@' output/${PROJECT_NAME}.tex
-  COMMAND sed -i 's@\\\\subsection@\\\\subsubsection@' output/${PROJECT_NAME}.tex
-  COMMAND sed -i 's@\\\\section@\\\\subsection@' output/${PROJECT_NAME}.tex
-  COMMAND sed -i 's@\\\\chapter@\\\\section@' output/${PROJECT_NAME}.tex
-  COMMAND sed -i 's@\\\\tableofcontents@\\\\setcounter{chapter}{1}\\\\tableofcontents@' output/${PROJECT_NAME}.tex
-  ##
-  ## for japanese doc,
-   # COMMAND cmake -E chdir output platex ${PROJECT_NAME}.tex
-   # COMMAND cmake -E chdir output platex ${PROJECT_NAME}.tex
-   # COMMAND cmake -E chdir output dvipdfmx ${PROJECT_NAME}
-  ## for english doc
-  COMMAND make -C output
-  ##
-  COMMAND cmake -E copy output/${PROJECT_NAME}.pdf output/${PROJECT_NAME}-${${PROJECT_NAME}_VERSION}.pdf
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-)
+  link_directories(
+    ${catkin_LIBRARY_DIRS}
+    ${PCL_LIBRARY_DIRS}
+    ${OpenCV_LIBRARY_DIRS}
+    /usr/lib/
+    lib
+    /usr/local/driveworks/lib/
+    ${DRIVEWORKS_TOOLKIT_TARGET_DIR}/lib
+    ${CUDA_TOOLKIT_TARGET_DIR}/lib
+    ${CUDA_TOOLKIT_TARGET_DIR}/lib/stubs
+    ${NVIDIA_DRIVE_SDK_TARGET_DIR}/usr/lib
+    ${NVIDIA_TENSORRT_TARGET_DIR}/lib
+  )
 
-if(CATKIN_ENABLE_TESTING)
-#  find_package(catkin REQUIRED COMPONENTS rostest roslaunch)
-#  file(GLOB LAUNCH_FILES launch/*.launch)
-#  foreach(LAUNCH_FILE ${LAUNCH_FILES})
-#    message(STATUS "Testing ${LAUNCH_FILE}")
-#    roslaunch_add_file_check(${LAUNCH_FILE})
-#  endforeach()
-#  roslaunch_add_file_check(launch/adis16470.launch with_rviz:=true with_plot:=true)
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_adi_driver.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
+  add_executable(gmsl_interface
+    nodes/gmsl_interface/gmsl_interface_node.cpp
+  )
+
+  add_dependencies(gmsl_interface
+    ${catkin_EXPORTED_TARGETS}
+  )
+
+  target_link_libraries(gmsl_interface
+    ${catkin_LIBRARIES}
+    autoware_driveworks
+    driveworks
+    cudart
+    cuda
+    ${DRIVEWORKS_LINKER_FLAGS}
+  )
+
+  add_executable(tensorrt_interface
+    nodes/tensorrt_interface/tensorrt_interface_node.cpp
+  )
+
+  add_dependencies(tensorrt_interface
+    ${catkin_EXPORTED_TARGETS}
+  )
+
+  target_link_libraries(tensorrt_interface
+    ${catkin_LIBRARIES}
+    autoware_driveworks
+    driveworks
+    cudart
+    cuda
+    ${DRIVEWORKS_LINKER_FLAGS}
+  )
+
+  # Use configure_file instead of file(COPY ...) so that if the input file
+  # changes, it gets copied to the DEVEL space anyway
+  configure_file(lib/libautoware_driveworks.so ${CATKIN_DEVEL_PREFIX}/lib/libautoware_driveworks.so COPYONLY)
+
+  install(TARGETS tensorrt_interface gmsl_interface
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
+
+  install(DIRECTORY launch/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+    PATTERN ".svn" EXCLUDE
+  )
+
+  install(FILES
+    lib/libautoware_driveworks.so
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/lib/libautoware_driveworks.so
+  )
+else()
+  message("autoware_driveworks_interface won't be built, CUDA and aarch64 are required.")
 endif()
