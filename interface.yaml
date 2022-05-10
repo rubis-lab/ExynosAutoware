@@ -1,5 +1,2 @@
-- {name: /javad_serial_driver}
-- name: /javad_topic_driver
-  subscribe: [/nmea_sentence]
-- name: /javad_topic_serial_reader
-  publish: [/nmea_sentence]
+- name: /hokuyo_3d
+  publish: [/points_raw, /imu, /mag]
