@@ -1,23 +1,24 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>autoware_pointgrey_drivers</name>
+  <name>sick_ldmrs_description</name>
   <version>1.12.0</version>
-  <description>The autoware_pointgrey_drivers package</description>
-  <maintainer email="kondoh@axe-inc.co.jp">Masao KONDOH</maintainer>
-  <maintainer email="abrahammonrroy@yahoo.com">Abraham Monrroy</maintainer>
-  <maintainer email="border_goldenmarket@yahoo.com">Daisuke Nishimatsu</maintainer>
+  <description>
+    This package contains an URDF description of the SICK LD-MRS scanner and all supporting mesh files.
+  </description>
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <author email="martin.guenther@dfki.de">Martin Günther</author>
+  <url type="website">http://wiki.ros.org/sick_ldmrs_description</url>
   <license>Apache 2</license>
 
-  <buildtool_depend>autoware_build_flags</buildtool_depend>
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>cv_bridge</depend>
-  <depend>image_transport</depend>
-  <depend>message_generation</depend>
-  <depend>roscpp</depend>
-  <depend>std_msgs</depend>
-  <depend>tf</depend>
+  <build_depend>roslaunch</build_depend>
 
-  <exec_depend>gscam</exec_depend>
-  <exec_depend>v4l-utils</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+  <export>
+    <architecture_independent/>
+  </export>
 </package>
