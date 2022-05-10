@@ -1,35 +1,36 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sick_lms5xx)
+project(javad_navsat_driver)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
+  geometry_msgs
+  nmea_msgs
+  roslint
+  rospy
   sensor_msgs
-  tf
 )
 
+catkin_python_setup()
 catkin_package()
 
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-  nodes/lms511/include/lms511
+install(
+  PROGRAMS
+     nodes/javad_serial_driver
+     nodes/javad_topic_driver
+     nodes/javad_topic_serial_reader
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  PATTERN ".svn" EXCLUDE
+)
+install(DIRECTORY cfg/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/cfg
+  PATTERN ".svn" EXCLUDE
 )
 
-add_executable(lms511_node
-  nodes/lms511/src/lms5xx_node.cpp
-  nodes/lms511/src/SickLMS5xx.cc
-  nodes/lms511/src/SickLMS5xxBufferMonitor.cc
-  nodes/lms511/src/SickLMS5xxMessage.cc
-)
-add_dependencies(lms511_node
-  ${catkin_EXPORTED_TARGETS}
-)
+# Check package for pep8 style, add a test to fail on violations.
+roslint_python()
 
-target_link_libraries(lms511_node
- ${catkin_LIBRARIES}
-)
-
-install(TARGETS lms511_node
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+if(CATKIN_ENABLE_TESTING)
+  #roslint_add_test()
+endif()
