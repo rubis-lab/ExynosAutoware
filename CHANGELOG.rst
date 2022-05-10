@@ -1,48 +1,27 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package autoware_driveworks_gmsl_interface
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package sick_ldmrs_driver
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
-* [fix] Install commands for all the packages (`#1861 <https://github.com/CPFL/Autoware/issues/1861>`_)
-  * Initial fixes to detection, sensing, semantics and utils
-  * fixing wrong filename on install command
-  * Fixes to install commands
-  * Hokuyo fix name
-  * Fix obj db
-  * Obj db include fixes
-  * End of final cleaning sweep
-  * Incorrect command order in runtime manager
-  * Param tempfile not required by runtime_manager
-  * * Fixes to runtime manager install commands
-  * Remove devel directory from catkin, if any
-  * Updated launch files for robosense
-  * Updated robosense
-  * Fix/add missing install (`#1977 <https://github.com/CPFL/Autoware/issues/1977>`_)
-  * Added launch install to lidar_kf_contour_track
-  * Added install to op_global_planner
-  * Added install to way_planner
-  * Added install to op_local_planner
-  * Added install to op_simulation_package
-  * Added install to op_utilities
-  * Added install to sync
-  * * Improved installation script for pointgrey packages
-  * Fixed nodelet error for gmsl cameras
-  * USe install space in catkin as well
-  * add install to catkin
-  * Fix install directives (`#1990 <https://github.com/CPFL/Autoware/issues/1990>`_)
-  * Fixed installation path
-  * Fixed params installation path
-  * Fixed cfg installation path
-  * Delete cache on colcon_release
-* Contributors: Abraham Monrroy Cano
 
 1.10.0 (2019-01-17)
 -------------------
-* [fix] CMake error & warning fixes on develop (`#1808 <https://github.com/CPFL/Autoware/issues/1808>`_)
-  * CMake fixes
-  * CMake updated to remove unnecessary dependencies when the package is not built
-  * added autoware flags
-* Feature/gmsl multiple (v2) (`#1683 <https://github.com/CPFL/Autoware/issues/1683>`_)
-  Added driver for multiple GMSL cameras for the Drive PX2.
-* Contributors: Abraham Monrroy Cano, Esteve Fernandez
+
+1.9.1 (2018-11-06)
+------------------
+
+1.9.0 (2018-10-31)
+------------------
+
+1.8.0 (2018-08-31)
+------------------
+* [Feature] Cross compile Autoware for aarch64 (`#1375 <https://github.com/CPFL/Autoware/pull/1375>`_)
+* Support Sick LD-MRS Lidar (`#1287 <https://github.com/CPFL/Autoware/pull/1287>`_)
+  * renamed sick_driver to sick_lms5xx
+  * Squashed 'ros/src/sensing/drivers/lidar/packages/sick/ldmrs/' content from commit 27976ff
+  git-subtree-dir: ros/src/sensing/drivers/lidar/packages/sick/ldmrs
+  git-subtree-split: 27976ff379263fdaab09e508bccdba7f9502be03
+  * checkbox for Sick LD-MRS added
+  * Added missing dependencies for sick_driver
+* Contributors: Esteve Fernandez, Yuki Kitsukawa
