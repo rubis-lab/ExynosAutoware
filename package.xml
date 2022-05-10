@@ -1,15 +1,22 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>image_processor</name>
+  <name>vel_pose_diff_checker</name>
   <version>1.12.0</version>
-  <description>The image_processor package</description>
-  <maintainer email="abrahammonrroy@yahoo.com">amc-nu</maintainer>
-  <license>Apache 2</license>
+  <description>The vel_pose_diff_checker package</description>
+  <maintainer email="yamato.ando@gmail.com">YamatoAndo</maintainer>
+  <license>Apache 2.0</license>
 
-  <buildtool_depend>autoware_build_flags</buildtool_depend>
   <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>autoware_build_flags</buildtool_depend>
 
-  <depend>cv_bridge</depend>
   <depend>roscpp</depend>
-  <depend>sensor_msgs</depend>
+  <depend>tf</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>autoware_msgs</depend>
+  <depend>autoware_system_msgs</depend>
+  <depend>amathutils_lib</depend>
+  <depend>autoware_health_checker</depend>
+  <depend>roslint</depend>
+
 </package>
