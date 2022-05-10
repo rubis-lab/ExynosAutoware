@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(lidar_euclidean_cluster_detect)
+project(points_downsampler)
 
 if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "aarch64")
   add_definitions(-D__aarch64__)
@@ -8,117 +8,69 @@ endif()
 find_package(autoware_build_flags REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
-  autoware_msgs
-  geometry_msgs
-  grid_map_cv
-  grid_map_msgs
-  grid_map_ros
-  jsk_rviz_plugins
+  autoware_config_msgs
+  message_generation
+  pcl_conversions
   pcl_ros
   roscpp
   sensor_msgs
-  std_msgs
-  tf
-  vector_map_server
+  velodyne_pointcloud
   rubis_lib
+  rubis_msgs
 )
 
-find_package(OpenMP)
-find_package(OpenCV REQUIRED)
+add_message_files(
+  FILES
+  PointsDownsamplerInfo.msg
+)
 
-set(CMAKE_CXX_FLAGS "-O2 -Wall ${CMAKE_CXX_FLAGS}")
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 catkin_package(
-  INCLUDE_DIRS include
   CATKIN_DEPENDS
-    vector_map_server
-    grid_map_ros
-    grid_map_cv
-    grid_map_msgs
-    jsk_rviz_plugins
-    rubis_lib
+  message_runtime
+  pcl_conversions
+  pcl_ros
+  sensor_msgs
+  rubis_lib
 )
-
-# Resolve system dependency on yaml-cpp, which apparently does not
-# provide a CMake find_package() module.
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
-find_path(YAML_CPP_INCLUDE_DIR NAMES yaml_cpp.h PATHS ${YAML_CPP_INCLUDE_DIRS})
-find_library(YAML_CPP_LIBRARY NAMES YAML_CPP PATHS ${YAML_CPP_LIBRARY_DIRS})
-link_directories(${YAML_CPP_LIBRARY_DIRS})
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
 )
-link_directories(${OpenCV_LIBRARY_DIRS})
+SET(CMAKE_CXX_FLAGS "-O2 -g -Wall ${CMAKE_CXX_FLAGS}")
 
-#Euclidean Cluster
-add_executable(lidar_euclidean_cluster_detect
-  nodes/lidar_euclidean_cluster_detect/lidar_euclidean_cluster_detect.cpp
-  nodes/lidar_euclidean_cluster_detect/cluster.cpp
-)
+add_executable(voxel_grid_filter nodes/voxel_grid_filter/voxel_grid_filter.cpp)
+add_executable(ring_filter nodes/ring_filter/ring_filter.cpp)
+add_executable(distance_filter nodes/distance_filter/distance_filter.cpp)
+add_executable(random_filter nodes/random_filter/random_filter.cpp)
 
-find_package(CUDA)
-find_package(Eigen3 QUIET)
+add_dependencies(voxel_grid_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(ring_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(distance_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(random_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-AW_CHECK_CUDA()
+target_link_libraries(voxel_grid_filter ${catkin_LIBRARIES})
+target_link_libraries(ring_filter ${catkin_LIBRARIES})
+target_link_libraries(distance_filter ${catkin_LIBRARIES})
+target_link_libraries(random_filter ${catkin_LIBRARIES})
 
-message("-- USING ACCELERATED CLUSTERING --")
-message("Version: " ${CUDA_VERSION})
-message("Library: " ${CUDA_CUDA_LIBRARY})
-message("Runtime: " ${CUDA_CUDART_LIBRARY})
-target_compile_definitions(lidar_euclidean_cluster_detect PRIVATE
-  GPU_CLUSTERING=1
-)
-
-cuda_add_library(gpu_euclidean_clustering
-  include/gpu_euclidean_clustering.h
-  nodes/lidar_euclidean_cluster_detect/gpu_euclidean_clustering.cu
-)
-
-target_link_libraries(gpu_euclidean_clustering
-  ${catkin_LIBRARIES}
-)
-
-target_link_libraries(lidar_euclidean_cluster_detect
-  ${OpenCV_LIBRARIES}
-  ${catkin_LIBRARIES}
-  ${YAML_CPP_LIBRARIES}
-  gpu_euclidean_clustering
-)
-
-install(TARGETS
-  gpu_euclidean_clustering
+install(
+  TARGETS
+    voxel_grid_filter
+    ring_filter
+    distance_filter
+    random_filter
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-add_dependencies(lidar_euclidean_cluster_detect
-  ${catkin_EXPORTED_TARGETS}
-)
-
-if(OPENMP_FOUND)
-  set_target_properties(lidar_euclidean_cluster_detect PROPERTIES
-    COMPILE_FLAGS ${OpenMP_CXX_FLAGS}
-    LINK_FLAGS ${OpenMP_CXX_FLAGS}
-  )
-endif()
-
-install(DIRECTORY include/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
-
-install(TARGETS
-  lidar_euclidean_cluster_detect
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY launch config
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
   PATTERN ".svn" EXCLUDE
 )
