@@ -1,6 +1,6 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package op_simu
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package op_planner
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
@@ -9,16 +9,7 @@ Changelog for package op_simu
 
 1.10.0 (2019-01-17)
 -------------------
-* Use colcon as the build tool (`#1704 <https://github.com/CPFL/Autoware/issues/1704>`_)
-  * Switch to colcon as the build tool instead of catkin
-  * Added cmake-target
-  * Added note about the second colcon call
-  * Added warning about catkin* scripts being deprecated
-  * Fix COLCON_OPTS
-  * Added install targets
-  * Update Docker image tags
-  * Message packages fixes
-  * Fix missing dependency
+* Fix Ros/ROS naming convention
 * Contributors: Esteve Fernandez
 
 1.9.1 (2018-11-06)
@@ -29,7 +20,22 @@ Changelog for package op_simu
 
 1.8.0 (2018-08-31)
 ------------------
+* Support old behavior of insert static object for obstacle avoidance testing
+  Only one simulated car available in the runtime manager
+  update for copywrite note
+  insert autoware_build_flags to new nodes
+* Update PlanningHelpers.h
+  Delete useless comment for including math.h
+* Update BehaviorPrediction.h
+  pass pointer as "const" for function "DeleteFromList" in both (BehaviorPrediction and LLP) classes
+* fix dependencies to make industrial_ci test pass
 * Fix Indigo build issues
+* Link against TinyXML
+* Test Simulated Vehicles
+  Fix Simulated Vehicle Initialization
+  Test Following
+  Test Obstacle Avoidance
+  Add Visualization information to rviz config file open_planner.rviz
 * [Fix] Moved C++11 flag to autoware_build_flags (`#1395 <https://github.com/CPFL/Autoware/pull/1395>`_)
 * [Feature] Makes sure that all binaries have their dependencies linked (`#1385 <https://github.com/CPFL/Autoware/pull/1385>`_)
 * Fix Vector Map parser problem, tested with three different maps
@@ -41,7 +47,20 @@ Changelog for package op_simu
   Test Tracking node (kf_contour_track)
   Test Simulation Nodes
   Test Utility Nodes
-* Contributors: Esteve Fernandez, hatem-darweesh
+* Update op_utility files for csv files loading
+  Update MappingHelpers with latest modifications
+  Update PlanningHelpers with latest modifications
+  add op_common_param node, for setting OpenPlanner parameter for all related nodes such as lidar_kf_contour_track
+  Improve tracking by including size different in association function
+  Update way_planner, dp_planner for compatibility with new Mapping Modifications, Map format is backward compatible
+* Update OpenPlanner libraries (op_planner, op_utitity, op_ros_helpers)
+  Update ring ground filter with latest implementation
+  Update lidar_kf_contour_track with latest implementation
+  Add op_utilities nodes (op_bag_player, op_data_logger, op_pose2tf)
+  Modify autoware_msgs for OpenPlanner use (CloudCluster, DetectedObject, lane, waypoint)
+  Update UI computing.yaml for the new nodes and modifies parameters
+  Update UI sensing.yaml for updated ring_ground_filter params
+* Contributors: Esteve Fernandez, Hatem Darweesh, hatem-darweesh, kitsukawa
 
 1.7.0 (2018-05-18)
 ------------------
@@ -144,39 +163,6 @@ Changelog for package op_simu
   * * Fixes to README
   * Enable industrial_ci
   * re enable native travis tests
-* Fix/cmake cleanup (`#1156 <https://github.com/CPFL/Autoware/pull/1156>`_)
-  * Initial Cleanup
-  * fixed also for indigo
-  * kf cjeck
-  * Fix road wizard
-  * Added travis ci
-  * Trigger CI
-  * Fixes to cv_tracker and lidar_tracker cmake
-  * Fix kitti player dependencies
-  * Removed unnecessary dependencies
-  * messages fixing for can
-  * Update build script travis
-  * Travis Path
-  * Travis Paths fix
-  * Travis test
-  * Eigen checks
-  * removed unnecessary dependencies
-  * Eigen Detection
-  * Job number reduced
-  * Eigen3 more fixes
-  * More Eigen3
-  * Even more Eigen
-  * find package cmake modules included
-  * More fixes to cmake modules
-  * Removed non ros dependency
-  * Enable industrial_ci for indidog and kinetic
-  * Wrong install command
-  * fix rviz_plugin install
-  * FastVirtualScan fix
-  * Fix Qt5 Fastvirtualscan
-  * Fixed qt5 system dependencies for rosdep
-  * NDT TKU Fix catkin not pacakged
-  * Fixes from industrial_ci
 * Contributors: Abraham Monrroy, Kosuke Murakami
 
 1.6.3 (2018-03-06)
@@ -195,8 +181,6 @@ Changelog for package op_simu
 1.6.0 (2017-12-11)
 ------------------
 * Prepare release for 1.6.0
-* - Test Tracking
-  - Add missing parameter to lunch file and runtime manager
 * - Add new Node for object polygon representation and tracking (kf_contour_tracker)
   - Add launch file and tune tracking parameters
   - Test with Moriyama rosbag
@@ -223,13 +207,15 @@ Changelog for package op_simu
 1.5.0 (2017-09-21)
 ------------------
 * Update changelog
+* Add changing topic name option for the planner selector.
 * Contributors: Yusuke FUJII
 
 1.4.0 (2017-08-04)
 ------------------
 * version number must equal current release number so we can start releasing in the future
 * added changelogs
-* Contributors: Dejan Pangercic
+* revise bugs in planninghelpers.cpp
+* Contributors: Dejan Pangercic, huiyi1990
 
 1.3.1 (2017-07-16)
 ------------------

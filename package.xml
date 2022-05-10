@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>op_simu</name>
+  <name>op_planner</name>
   <version>1.12.0</version>
-  <description>The libopenplanner_simu package</description>
+  <description>The libopenplanner_planner package</description>
   <maintainer email="yusuke.fujii@tier4.jp">Yusuke FUJII</maintainer>
   <author email="hatem.darweesh@g.sp.m.is.nagoya-u.ac.jp">Hatem Darweesh</author>
   <license>Apache 2</license>
@@ -10,13 +10,7 @@
   <buildtool_depend>autoware_build_flags</buildtool_depend>
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>glut</depend>
-  <depend>libglew-dev</depend>
-  <depend>libopencv-dev</depend>
-  <depend>libx11-dev</depend>
-  <depend>libxi-dev</depend>
-  <depend>libxmu-dev</depend>
-  <depend>op_planner</depend>
+  <depend>cmake_modules</depend>
   <depend>op_utility</depend>
-  <depend>opengl</depend>
+  <depend>tinyxml</depend>
 </package>
