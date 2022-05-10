@@ -1,108 +1,79 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(vector_map_server)
+project(op_simu)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(autoware_build_flags REQUIRED)
-
 find_package(catkin REQUIRED COMPONENTS
-  autoware_msgs
-  geometry_msgs
-  message_generation
-  roscpp
-  roslint
-  vector_map
-  vector_map_msgs
-  visualization_msgs
+  op_utility
+  op_planner
 )
 
-set(CMAKE_CXX_FLAGS "-O2 -Wall ${CMAKE_CXX_FLAGS}")
-
-add_service_files(
-  FILES
-  GetCrossRoad.srv
-  GetCrossWalk.srv
-  GetCurb.srv
-  GetCurveMirror.srv
-  GetDTLane.srv
-  GetDriveOnPortion.srv
-  GetFence.srv
-  GetGuardRail.srv
-  GetGutter.srv
-  GetLane.srv
-  GetNode.srv
-  GetRailCrossing.srv
-  GetRoadEdge.srv
-  GetRoadMark.srv
-  GetRoadPole.srv
-  GetRoadSign.srv
-  GetSideStrip.srv
-  GetSideWalk.srv
-  GetSignal.srv
-  GetStopLine.srv
-  GetStreetLight.srv
-  GetUtilityPole.srv
-  GetWall.srv
-  GetWayArea.srv
-  GetWhiteLine.srv
-  GetZebraZone.srv
-  PositionState.srv
-)
-
-generate_messages(
-  DEPENDENCIES
-    autoware_msgs
-    geometry_msgs
-    vector_map_msgs
-)
+find_package(OpenCV REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(GLUT REQUIRED)
+find_package(X11 REQUIRED)
+find_package(Threads REQUIRED)
 
 catkin_package(
-  CATKIN_DEPENDS 
-    message_runtime 
-    geometry_msgs 
-    autoware_msgs 
-    vector_map_msgs 
-    vector_map 
-    visualization_msgs
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS op_utility op_planner
 )
 
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${OpenGL_INCLUDE_DIRS}
+  ${GLUT_INCLUDE_DIRS}
+  ${GLEW_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME} 
-  nodes/vector_map_server/vector_map_server.cpp
+set(SIMUH_SRC        
+  src/SimpleTracker.cpp
+  src/SimulatedTrajectoryFollower.cpp
+  src/TrajectoryFollower.cpp        
+)
+
+## Declare a cpp library
+add_library(${PROJECT_NAME}
+  ${SIMUH_SRC}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  ${catkin_LIBRARIES} 
-)
-
-add_dependencies(${PROJECT_NAME}
-  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
-  ${catkin_EXPORTED_TARGETS}
-)
-
-add_executable(vector_map_client
-  nodes/vector_map_client/vector_map_client.cpp
-)
-
-target_link_libraries(vector_map_client
   ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${OPENGL_LIBRARIES}
+  ${GLUT_LIBRARIES}
+  ${GLEW_LIBRARIES}
+  ${X11_LIBRARIES}
+  ${CMAKE_THREAD_LIBS_INIT}
+)
+add_executable(Simu
+  ${SIMUH_SRC}
+  main.cpp
 )
 
-add_dependencies(vector_map_client
-  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
-  ${catkin_EXPORTED_TARGETS}
+target_link_libraries(Simu
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+  ${OPENGL_LIBRARIES}
+  ${GLUT_LIBRARIES}
+  ${GLUT_LIBRARY}
+  ${GLEW_LIBRARIES}
+  ${X11_LIBRARIES}
+  ${CMAKE_THREAD_LIBS_INIT}
 )
 
-set(ROSLINT_CPP_OPTS "--filter=-build/c++14,-runtime/references,-whitespace/braces")
-roslint_cpp()
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+)
 
-install(TARGETS ${PROJECT_NAME} vector_map_client
+install(TARGETS ${PROJECT_NAME} Simu
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
-if(CATKIN_ENABLE_TESTING)
-  roslint_add_test()
-endif()

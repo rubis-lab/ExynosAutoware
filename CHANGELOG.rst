@@ -1,6 +1,6 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package vector_map_server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package op_simu
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
@@ -9,15 +9,6 @@ Changelog for package vector_map_server
 
 1.10.0 (2019-01-17)
 -------------------
-* Fixes for catkin_make
-* Switch to Apache 2 license (develop branch) (`#1741 <https://github.com/CPFL/Autoware/issues/1741>`_)
-  * Switch to Apache 2
-  * Replace BSD-3 license header with Apache 2 and reassign copyright to the
-  Autoware Foundation.
-  * Update license on Python files
-  * Update copyright years
-  * Add #ifndef/define _POINTS_IMAGE_H\_
-  * Updated license comment
 * Use colcon as the build tool (`#1704 <https://github.com/CPFL/Autoware/issues/1704>`_)
   * Switch to colcon as the build tool instead of catkin
   * Added cmake-target
@@ -28,26 +19,29 @@ Changelog for package vector_map_server
   * Update Docker image tags
   * Message packages fixes
   * Fix missing dependency
-* Contributors: Esteve Fernandez, amc-nu
+* Contributors: Esteve Fernandez
 
 1.9.1 (2018-11-06)
 ------------------
 
 1.9.0 (2018-10-31)
 ------------------
-* [fix] PascalCase messages (`#1408 <https://github.com/CPFL/Autoware/issues/1408>`_)
-  * Switch message files to pascal case
-  * Switch message names to pascal case in Runtime Manager
-  * Switch message names to pascal case in *.yaml
-  * Rename brake_cmd and steer_cmd to BrakeCmd and SteerCmd in main.yaml
-* Contributors: Esteve Fernandez
 
 1.8.0 (2018-08-31)
 ------------------
+* Fix Indigo build issues
 * [Fix] Moved C++11 flag to autoware_build_flags (`#1395 <https://github.com/CPFL/Autoware/pull/1395>`_)
 * [Feature] Makes sure that all binaries have their dependencies linked (`#1385 <https://github.com/CPFL/Autoware/pull/1385>`_)
-* [Fix] Extend and Update interface.yaml (`#1291 <https://github.com/CPFL/Autoware/pull/1291>`_)
-* Contributors: Esteve Fernandez, Kenji Funaoka
+* Fix Vector Map parser problem, tested with three different maps
+  Fix Global Planning function for the new map modification
+  Add OpenPlanner Simulator for perception, traffic lights, cars
+  Add OpenPlanner new version to replace wp_planner and dp_planner
+  Remove unnecessary files from OpenPlanner libraries
+  Test Global and Local planning
+  Test Tracking node (kf_contour_track)
+  Test Simulation Nodes
+  Test Utility Nodes
+* Contributors: Esteve Fernandez, hatem-darweesh
 
 1.7.0 (2018-05-18)
 ------------------
@@ -183,8 +177,6 @@ Changelog for package vector_map_server
   * Fixed qt5 system dependencies for rosdep
   * NDT TKU Fix catkin not pacakged
   * Fixes from industrial_ci
-* -Added support fot VMap colouring to Left Traffic signals (`#988 <https://github.com/CPFL/Autoware/pull/988>`_)
-  -Added Lane number on tlr_superimpose
 * Contributors: Abraham Monrroy, Kosuke Murakami
 
 1.6.3 (2018-03-06)
@@ -203,8 +195,21 @@ Changelog for package vector_map_server
 1.6.0 (2017-12-11)
 ------------------
 * Prepare release for 1.6.0
-* Initial modifications to feat_proj, tlr, context and vector_map loader, server and client to support different types of traffic signals
-* Contributors: AMC, Yamato ANDO
+* - Test Tracking
+  - Add missing parameter to lunch file and runtime manager
+* - Add new Node for object polygon representation and tracking (kf_contour_tracker)
+  - Add launch file and tune tracking parameters
+  - Test with Moriyama rosbag
+* - Update OpenPlanner libraries (plannerh, simuh, utilityh) with the latest modifications
+  - Fix inconsistency after library update, make sure old (way_planner, dp_planner) are working fine
+  - Create new package (op_local_planner)
+  - Create common launch file for local planning params
+  - Create new node (op_trajectory_generator)
+  - Create launch file for trajectory generation only
+  - Test generating trajectories (rollouts) in simulation with way_planner
+  - Test generating trajectories with real rosbag data with way_planner
+  - Test generating trajectories with real rosbag data and waypoints_loader
+* Contributors: Yamato ANDO, hatem-darweesh
 
 1.5.1 (2017-09-25)
 ------------------
@@ -218,8 +223,7 @@ Changelog for package vector_map_server
 1.5.0 (2017-09-21)
 ------------------
 * Update changelog
-* no jsk msgs used
-* Contributors: Dejan Pangercic, Yusuke FUJII
+* Contributors: Yusuke FUJII
 
 1.4.0 (2017-08-04)
 ------------------
@@ -229,18 +233,14 @@ Changelog for package vector_map_server
 
 1.3.1 (2017-07-16)
 ------------------
-* hotfix a srv message dependencies
-* Contributors: Yusuke FUJII
 
 1.3.0 (2017-07-14)
 ------------------
-* convert to autoware_msgs
-* Contributors: YamatoAndo
 
 1.2.0 (2017-06-07)
 ------------------
-* fix circular-dependency
-* Contributors: Shohei Fujii
+* Change OpenPlanner stand alone libraries names.
+* Contributors: hatem-darweesh
 
 1.1.2 (2017-02-27 23:10)
 ------------------------
@@ -256,11 +256,3 @@ Changelog for package vector_map_server
 
 1.0.0 (2016-12-22)
 ------------------
-* Add WayArea detection service
-* Remove unnecessary error checks
-* Add function to get current data
-* Add services of road data
-* Fix namespace of vector_map_server services
-* Add vector_map_client
-* Add vector_map_server
-* Contributors: syouji
