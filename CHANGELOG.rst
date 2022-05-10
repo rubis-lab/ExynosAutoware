@@ -1,6 +1,6 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package autoware_connector
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package lane_detector
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
@@ -28,131 +28,150 @@ Changelog for package autoware_connector
   * Update Docker image tags
   * Message packages fixes
   * Fix missing dependency
-* set negative speed if shift is reverse
-* Contributors: Esteve Fernandez, Yamato ANDO, amc-nu
+* Contributors: Esteve Fernandez, amc-nu
 
 1.9.1 (2018-11-06)
 ------------------
 
 1.9.0 (2018-10-31)
 ------------------
-* Moved CAN mesages to autoware_can_msgs
-* Contributors: Esteve Fernandez
 
 1.8.0 (2018-08-31)
 ------------------
-* change source from caninfo to vehicle status ,for can_velocity
+* [Feature] Cross compile Autoware for aarch64 (`#1375 <https://github.com/CPFL/Autoware/pull/1375>`_)
 * [Fix] Extend and Update interface.yaml (`#1291 <https://github.com/CPFL/Autoware/pull/1291>`_)
-* Contributors: Kenji Funaoka, Yusuke FUJII
+* Contributors: Esteve Fernandez, Kenji Funaoka
 
 1.7.0 (2018-05-18)
 ------------------
 * update Version from 1.6.3 to 1.7.0 in package.xml and CHANGELOG.rst
-* [fix] Fixes for all packages and dependencies (`#1240 <https://github.com/CPFL/Autoware/pull/1240>`_)
-  * Initial Cleanup
-  * fixed also for indigo
-  * kf cjeck
-  * Fix road wizard
-  * Added travis ci
-  * Trigger CI
-  * Fixes to cv_tracker and lidar_tracker cmake
-  * Fix kitti player dependencies
-  * Removed unnecessary dependencies
-  * messages fixing for can
-  * Update build script travis
-  * Travis Path
-  * Travis Paths fix
-  * Travis test
-  * Eigen checks
-  * removed unnecessary dependencies
-  * Eigen Detection
-  * Job number reduced
-  * Eigen3 more fixes
-  * More Eigen3
-  * Even more Eigen
-  * find package cmake modules included
-  * More fixes to cmake modules
-  * Removed non ros dependency
-  * Enable industrial_ci for indidog and kinetic
-  * Wrong install command
-  * fix rviz_plugin install
-  * FastVirtualScan fix
-  * Fix Qt5 Fastvirtualscan
-  * Fixed qt5 system dependencies for rosdep
-  * NDT TKU Fix catkin not pacakged
-  * More in detail dependencies fixes for more packages
-  * GLEW library for ORB
-  * Ignore OrbLocalizer
-  * Ignore Version checker
-  * Fix for driveworks interface
-  * driveworks not catkinpackagedd
-  * Missing catkin for driveworks
-  * libdpm opencv not catkin packaged
-  * catkin lib gnss  not included in obj_db
-  * Points2Polygon fix
-  * More missing dependencies
-  * image viewer not packaged
-  * Fixed SSH2 detection, added viewers for all distros
-  * Fix gnss localizer incorrect dependency config
-  * Fixes to multiple packages dependencies
-  * gnss plib and package
-  * More fixes to gnss
-  * gnss dependencies for gnss_loclaizer
-  * Missing gnss dependency for gnss on localizer
-  * More fixes for dependencies
-  Replaced gnss for autoware_gnss_library
-  * gnss more fixes
-  * fixes to more dependencies
-  * header dependency
-  * Debug message
-  * more debug messages changed back to gnss
-  * debud messages
-  * gnss test
-  * gnss install command
-  * Several fixes for OpenPlanner and its lbiraries
-  * Fixes to ROSInterface
-  * More fixes to robotsdk and rosinterface
-  * robotsdk calibration fix
-  * Fixes to rosinterface robotsdk libraries and its nodes
-  * Fixes to Qt5 missing dependencies in robotsdk
-  * glviewer missing dependencies
-  * Missing qt specific config cmake for robotsdk
-  * disable cv_tracker
-  * Fix to open planner un needed dependendecies
-  * Fixes for libraries indecision maker
-  * Fixes to libraries decision_maker installation
-  * Gazebo on Kinetic
-  * Added Missing library
-  * * Removed Gazebo and synchonization packages
-  * Renames vmap in lane_planner
-  * Added installation commands for missing pakcages
-  * Fixes to lane_planner
-  * Added NDT TKU Glut extra dependencies
-  * ndt localizer/lib fast pcl fixes
-  re enable cv_tracker
-  * Fix kf_lib
-  * Keep industrial_ci
-  * Fixes for dpm library
-  * Fusion lib fixed
-  * dpm and fusion header should match exported project name
-  * Fixes to dpm_ocv  ndt_localizer and pcl_omp
-  * no fast_pcl anymore
-  * fixes to libdpm and its package
-  * CI test
-  * test with native travis ci
-  * missing update for apt
-  * Fixes to pcl_omp installation and headers
-  * Final fixes for tests, modified README
-  * * Fixes to README
-  * Enable industrial_ci
-  * re enable native travis tests
-* fix a build setting
-* change odometry topic name
-* change can_translator
-  - Support to vehicle_status(can intermediate layer)
-  - Separate the can translator and the odometry.
-  - Support to output vehicle autonomous mode
-* Contributors: Abraham Monrroy, Kosuke Murakami, Yusuke FUJII
+* [Fix] rename packages (`#1269 <https://github.com/CPFL/Autoware/pull/1269>`_)
+  * rename lidar_tracker
+  * Modify pf_lidar_track's cmake file
+  * Refactor code
+  * Rename from euclidean_lidar_tracker to lidar_euclidean_track
+  * Rename from kf_contour_track to lidar_kf_contour_track
+  * Rename from kf_lidar_track to lidar_kf_track, but need some modification in euclidean cluster(Cluster.h)
+  * Rename from pf_lidar_tarck to lidar_pf_track
+  * Rename range_fusion
+  * Rename obj_reproj
+  * Rename euclidean_cluster to lidar_euclidean_cluster_detect
+  * Rename svm_lidar_detect to lidar_svm_detect
+  * Rename kf_lidar_track to lidar_kf_track
+  * Change version 1.6.3 to 1.7.0 in pacakge.xml
+  * Modify CMake so that extrenal header would be loaded
+  * Remove obj_reproj from cv_tracker
+  * Add interface.yaml
+  * Rename road_wizard to trafficlight_recognizer
+  * create common directory
+  * Add lidar_imm_ukf_pda_track
+  * create vision_detector and moved cv
+  * Modify interface.yaml and package.xml
+  * remove dpm_ocv
+  * moved directory
+  * Delete unnecessary launch file
+  * Delete rcnn related file and code
+  * separated dummy_track from cv_tracker
+  * separated klt_track from cv_tracker
+  * Fix a cmake
+  * Remove unnecessary dependency of lidar_euclidean_cluster_detect package
+  * Rename image_segmenter to vision_segment_enet_detect
+  * Remove unnecessary dependency of lidar_svm_detect package
+  * separated kf_track and fix a some compiling issue
+  * move viewers
+  * merge ndt_localizer and icp_localizer, and rename to lidar_localizer
+  * Remove unnecessary dependency of lidar_euclidean_track
+  * moved image lib
+  * add launch
+  * lib move under lidar_tracker
+  * Rename dpm_ttic to vision_dpm_ttic_detect
+  * rename yolo3detector to vision_yolo3_detect
+  * Modify cmake and package.xml in vision_dpm_ttic_detect
+  * moved sourcefiles into nodes dir
+  * moved sourcefiles into nodes dir
+  * Move cv_tracker/data folder and delete cv_tracker/model folder
+  * fix a package file and cmake
+  * Rename yolo2 -> vision_yolo2_detect
+  * fix a package file and cmake
+  * Fix package name of launch file
+  * Rename ssd to vision_ssd_detect
+  * fixed cmake and package for decerese dependencies
+  * remove top packages dir for detection
+  * fixed cmake for cuda
+  * Rename lane_detector to vision_lane_detect
+  * Modify package.xml in lidar-related packages
+  * Remove unnecessary dependencies in lidar_detector and lidar_tracker
+  * Modify computing.yaml for dpm_ttic
+  * Modify dpm_ttic launch file
+  * Remove/Add dependencies to trafficlight_recognizer
+  * Update data folder in dpm_ttic
+  * Modified CMake and package file in dpm_ttic.
+  * Remove src dir in imm_ukf_pda_track
+  * removed unnecessary comments
+  * rename lidar_tracker
+  * Modify pf_lidar_track's cmake file
+  * Refactor code
+  * Rename from euclidean_lidar_tracker to lidar_euclidean_track
+  * Rename from kf_contour_track to lidar_kf_contour_track
+  * Rename from kf_lidar_track to lidar_kf_track, but need some modification in euclidean cluster(Cluster.h)
+  * Rename from pf_lidar_tarck to lidar_pf_track
+  * Rename range_fusion
+  * Rename obj_reproj
+  * Rename road_wizard to trafficlight_recognizer
+  * Rename euclidean_cluster to lidar_euclidean_cluster_detect
+  * Rename svm_lidar_detect to lidar_svm_detect
+  * Rename kf_lidar_track to lidar_kf_track
+  * Change version 1.6.3 to 1.7.0 in pacakge.xml
+  * Modify CMake so that extrenal header would be loaded
+  * Remove obj_reproj from cv_tracker
+  * Add interface.yaml
+  * create common directory
+  * Add lidar_imm_ukf_pda_track
+  * create vision_detector and moved cv
+  * Modify interface.yaml and package.xml
+  * remove dpm_ocv
+  * moved directory
+  * Delete unnecessary launch file
+  * Delete rcnn related file and code
+  * separated dummy_track from cv_tracker
+  * separated klt_track from cv_tracker
+  * Fix a cmake
+  * Remove unnecessary dependency of lidar_euclidean_cluster_detect package
+  * Rename image_segmenter to vision_segment_enet_detect
+  * Remove unnecessary dependency of lidar_svm_detect package
+  * separated kf_track and fix a some compiling issue
+  * move viewers
+  * merge ndt_localizer and icp_localizer, and rename to lidar_localizer
+  * Remove unnecessary dependency of lidar_euclidean_track
+  * moved image lib
+  * add launch
+  * lib move under lidar_tracker
+  * Rename dpm_ttic to vision_dpm_ttic_detect
+  * rename yolo3detector to vision_yolo3_detect
+  * Modify cmake and package.xml in vision_dpm_ttic_detect
+  * moved sourcefiles into nodes dir
+  * moved sourcefiles into nodes dir
+  * Move cv_tracker/data folder and delete cv_tracker/model folder
+  * fix a package file and cmake
+  * Rename yolo2 -> vision_yolo2_detect
+  * fix a package file and cmake
+  * Fix package name of launch file
+  * Rename ssd to vision_ssd_detect
+  * fixed cmake and package for decerese dependencies
+  * remove top packages dir for detection
+  * fixed cmake for cuda
+  * Rename lane_detector to vision_lane_detect
+  * Modify package.xml in lidar-related packages
+  * Remove unnecessary dependencies in lidar_detector and lidar_tracker
+  * Modify computing.yaml for dpm_ttic
+  * Modify dpm_ttic launch file
+  * Remove/Add dependencies to trafficlight_recognizer
+  * Update data folder in dpm_ttic
+  * Modified CMake and package file in dpm_ttic.
+  * Remove src dir in imm_ukf_pda_track
+  * Fix bug for not starting run time manager
+  * Remove invalid dependency
+* Contributors: Kosuke Murakami
 
 1.6.3 (2018-03-06)
 ------------------
@@ -169,11 +188,6 @@ Changelog for package autoware_connector
 
 1.6.0 (2017-12-11)
 ------------------
-* Prepare release for 1.6.0
-* perfect the code. same commit with `#920 <https://github.com/cpfl/autoware/issues/920>`_.
-  remove duplicate "if" assert.
-  if v_info\_.is_stored == false,  tw.twist.angular.z is not set value or previous value, it is abnormal, and later in convertSteeringAngleToAngularVelocity( ) function, it also need to assert v_info\_.is_stored is true or not, duplicate assert.
-* Contributors: Yamato ANDO, asimay
 
 1.5.1 (2017-09-25)
 ------------------
@@ -187,8 +201,7 @@ Changelog for package autoware_connector
 1.5.0 (2017-09-21)
 ------------------
 * Update changelog
-* autoware_connector deps fixed
-* Contributors: Dejan Pangercic, Yusuke FUJII
+* Contributors: Yusuke FUJII
 
 1.4.0 (2017-08-04)
 ------------------
@@ -206,24 +219,33 @@ Changelog for package autoware_connector
 
 1.2.0 (2017-06-07)
 ------------------
-* add can2odom.launch
-* Contributors: yukikitsukawa
 
 1.1.2 (2017-02-27 23:10)
 ------------------------
-* output log
-* Contributors: h_ohta
 
 1.1.1 (2017-02-27 22:25)
 ------------------------
 
 1.1.0 (2017-02-24)
 ------------------
-* Add autoware_connector instead of vel_pose_mux
-* Contributors: h_ohta
 
 1.0.1 (2017-01-14)
 ------------------
 
 1.0.0 (2016-12-22)
 ------------------
+* Add module graph tool
+* Add missing dependencies
+* Add ROS include path to 'include_directories'
+* Fix for rosjava installed platform
+  Some packages don't declare package dependencies correctly.
+  This makes message jar files built failure.
+* Make image source selectable from launch file
+  In order to use multiple camera, I modified
+  - all viewers
+  - some cv_tracker's packages and a library
+  - lane_detector package
+  - some road_wizard package
+  so that input image topic can be changed easily from launch file
+* Initial commit for public release
+* Contributors: Manato Hirabayashi, Shinpei Kato, Syohei YOSHIDA, USUDA Hisashi

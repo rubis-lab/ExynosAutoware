@@ -1,64 +1,38 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(autoware_connector)
+project(vision_lane_detect)
 
 find_package(catkin REQUIRED COMPONENTS
-  autoware_build_flags
-  autoware_can_msgs
   autoware_msgs
-  geometry_msgs
-  nav_msgs
+  cv_bridge
+  image_transport
   roscpp
-  std_msgs
-  tf
-  rubis_lib
 )
+find_package(OpenCV REQUIRED)
+find_package(OpenGL REQUIRED)
 
 catkin_package()
 
 include_directories(
-  include
   ${catkin_INCLUDE_DIRS}
+  nodes/vision_lane_detect
+  ${OpenCV_INCLUDE_DIRS}
 )
 
-add_executable(can_status_translator
-  nodes/can_status_translator/can_status_translator_node.cpp
-  nodes/can_status_translator/can_status_translator_core.cpp
+add_executable(vision_lane_detect
+  nodes/vision_lane_detect/vision_lane_detect.cpp
 )
 
-target_link_libraries(can_status_translator
+target_link_libraries(vision_lane_detect
   ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${OPENGL_LIBRARIES}
 )
-
-add_dependencies(can_status_translator
+add_dependencies(vision_lane_detect
   ${catkin_EXPORTED_TARGETS}
 )
 
-add_executable(can_odometry
-  nodes/can_odometry/can_odometry_node.cpp
-  nodes/can_odometry/can_odometry_core.cpp
-)
-
-target_link_libraries(can_odometry
-  ${catkin_LIBRARIES}
-)
-
-add_dependencies(can_odometry
-  ${catkin_EXPORTED_TARGETS}
-)
-
-install(TARGETS can_status_translator
+install(TARGETS vision_lane_detect
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(TARGETS can_odometry
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
-  PATTERN ".svn" EXCLUDE
 )
