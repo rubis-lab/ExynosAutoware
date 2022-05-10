@@ -1,20 +1,18 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>autoware_health_checker</name>
+  <name>op_utility</name>
   <version>1.12.0</version>
-  <description>The autoware_health_checker package</description>
-  <maintainer email="masaya.kataoka@tier4.jp">MasayaKataoka</maintainer>
-  <license>Apache 2.0</license>
+  <description>The libopenplanner_utility package</description>
+  <maintainer email="yusuke.fujii@tier4.jp">Yusuke FUJII</maintainer>
+  <author email="hatem.darweesh@g.sp.m.is.nagoya-u.ac.jp">Hatem Darweesh</author>
+  <license>Apache 2</license>
 
+  <buildtool_depend>autoware_build_flags</buildtool_depend>
   <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>cmake_modules</buildtool_depend>
   <test_depend>rostest</test_depend>
 
-  <depend>autoware_system_msgs</depend>
-  <depend>diagnostic_msgs</depend>
-  <depend>jsk_rviz_plugins</depend>
-  <depend>roscpp</depend>
-  <depend>rosgraph_msgs</depend>
-  <depend>rosunit</depend>
-  <depend>ros_observer</depend>
-  <depend>roslint</depend>
+  <depend>tinyxml</depend>
+  <depend>vector_map_msgs</depend>
+  <depend>vector_map_server</depend>
 </package>
