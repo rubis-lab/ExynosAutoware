@@ -1,46 +1,28 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package ymc
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package as
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
-* [fix] Install commands for all the packages (`#1861 <https://github.com/CPFL/Autoware/issues/1861>`_)
-  * Initial fixes to detection, sensing, semantics and utils
-  * fixing wrong filename on install command
-  * Fixes to install commands
-  * Hokuyo fix name
-  * Fix obj db
-  * Obj db include fixes
-  * End of final cleaning sweep
-  * Incorrect command order in runtime manager
-  * Param tempfile not required by runtime_manager
-  * * Fixes to runtime manager install commands
-  * Remove devel directory from catkin, if any
-  * Updated launch files for robosense
-  * Updated robosense
-  * Fix/add missing install (`#1977 <https://github.com/CPFL/Autoware/issues/1977>`_)
-  * Added launch install to lidar_kf_contour_track
-  * Added install to op_global_planner
-  * Added install to way_planner
-  * Added install to op_local_planner
-  * Added install to op_simulation_package
-  * Added install to op_utilities
-  * Added install to sync
-  * * Improved installation script for pointgrey packages
-  * Fixed nodelet error for gmsl cameras
-  * USe install space in catkin as well
-  * add install to catkin
-  * Fix install directives (`#1990 <https://github.com/CPFL/Autoware/issues/1990>`_)
-  * Fixed installation path
-  * Fixed params installation path
-  * Fixed cfg installation path
-  * Delete cache on colcon_release
+* [Feature] Improve AS vehicle interface (`#1945 <https://github.com/CPFL/Autoware/issues/1945>`_)
+  * Rename and modify as_interface for drive-by-wire
+  * Fix dependences
+  * Rename as_interface -> ssc_interface, refactored
+  * Fix launch
+  * Modify source of desired values to vehicle_cmd
+  * Apply clang-format
+  * Add vehicle_status topic based on feedback topics
+  * Add rear wheel speed mode, using pacmod/parsed_tx/wheel_speed_rpt instead of as/velocity_accel
+  * Add emergency stop mode, occured by vehicle_cmd.emergency and timeout
+  * Add adaptive gear ratio mode, for more accurate steering angle
+  * Remove unsued definition
+  * Updated cross-build image date
+  * Fix zero division
 * Fix license notice in corresponding package.xml
-* Contributors: Abraham Monrroy Cano, amc-nu
+* Contributors: Akihito Ohsato, amc-nu
 
 1.10.0 (2019-01-17)
 -------------------
-* Fixes for catkin_make
 * Switch to Apache 2 license (develop branch) (`#1741 <https://github.com/CPFL/Autoware/issues/1741>`_)
   * Switch to Apache 2
   * Replace BSD-3 license header with Apache 2 and reassign copyright to the
@@ -59,11 +41,8 @@ Changelog for package ymc
   * Update Docker image tags
   * Message packages fixes
   * Fix missing dependency
-* Add steering offset parameter
-* Add catkin dependency
-* Apply clang-format
-* Replace twist_cmd -> vehicle_cmd on ymc interface
-* Contributors: Akihito Ohsato, Esteve Fernandez, amc-nu
+* Replace module_comm_msgs with automotive_platform_msgs
+* Contributors: Esteve Fernandez
 
 1.9.1 (2018-11-06)
 ------------------
@@ -75,7 +54,6 @@ Changelog for package ymc
 ------------------
 * [Fix] Moved C++11 flag to autoware_build_flags (`#1395 <https://github.com/CPFL/Autoware/pull/1395>`_)
 * [Feature] Makes sure that all binaries have their dependencies linked (`#1385 <https://github.com/CPFL/Autoware/pull/1385>`_)
-* [Feature] Cross compile Autoware for aarch64 (`#1375 <https://github.com/CPFL/Autoware/pull/1375>`_)
 * [Fix] Extend and Update interface.yaml (`#1291 <https://github.com/CPFL/Autoware/pull/1291>`_)
 * Contributors: Esteve Fernandez, Kenji Funaoka
 
@@ -180,7 +158,8 @@ Changelog for package ymc
   * * Fixes to README
   * Enable industrial_ci
   * re enable native travis tests
-* Contributors: Abraham Monrroy, Kosuke Murakami
+* Building and using the AS node with Autoware
+* Contributors: Abraham Monrroy, Francis Joseph, Kosuke Murakami
 
 1.6.3 (2018-03-06)
 ------------------
@@ -198,12 +177,13 @@ Changelog for package ymc
 1.6.0 (2017-12-11)
 ------------------
 * Prepare release for 1.6.0
-* add support ymc_can on aarch64
-* fix build error on aarch64
-* Change output from screen to log
-* fix linking library
-* Ensure compatibility of proprietary lib
-* Add G30ESLi interface
+* adapted the version to the current version
+* Use correct callback function
+* Add check of as submodule
+* Change 2015 to 2017
+* Fix publishing msg type
+* Change output to log
+* Add pacmod interface
 * Contributors: TomohitoAndo, Yamato ANDO, Yusuke FUJII
 
 1.5.1 (2017-09-25)

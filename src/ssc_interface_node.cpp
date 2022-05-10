@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-#include "g30esli_interface.h"
+#include <ros/ros.h>
 
-int main(int argc, char* argv[])
+#include "as/ssc_interface.h"
+
+int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "g30esli_interface");
-  G30esliInterface node;
+  ros::init(argc, argv, "ssc_interface");
+  SSCInterface node;
   node.run();
+
+  return 0;
 }
