@@ -1,31 +1,25 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(autoware_system_msgs)
-
-add_compile_options(-std=c++11)
+project(tablet_socket_msgs)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
-  rosgraph_msgs
   std_msgs
 )
 
 add_message_files(
   FILES
-    DiagnosticStatus.msg
-    DiagnosticStatusArray.msg
-    HardwareStatus.msg
-    NodeStatus.msg
-    SystemStatus.msg
+    Waypoint.msg
+    error_info.msg
+    gear_cmd.msg
+    mode_cmd.msg
+    mode_info.msg
+    route_cmd.msg
 )
 
-generate_messages(DEPENDENCIES
-  rosgraph_msgs
-  std_msgs
+generate_messages(
+  DEPENDENCIES std_msgs 
 )
 
 catkin_package(
-  CATKIN_DEPENDS
-    message_runtime
-    rosgraph_msgs
-    std_msgs
+  CATKIN_DEPENDS message_runtime std_msgs
 )
