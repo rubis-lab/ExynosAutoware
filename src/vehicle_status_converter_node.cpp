@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-#include "vel_pose_diff_checker/vel_pose_diff_checker_core.h"
+#include "twist_generator/vehicle_status_converter.hpp"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "vel_pose_diff_checker");
-  ros::NodeHandle nh;
-  ros::NodeHandle private_nh("~");
-
-  VelPoseDiffChecker node(nh, private_nh);
+  ros::init(argc, argv, "twist_generator");
+  VehicleStatusConverter obj;
   ros::spin();
-
   return 0;
-}
+};
