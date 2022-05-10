@@ -1,1 +1,2 @@
-FOCS box control module
+# Controller
+Control module for IONIC EV
