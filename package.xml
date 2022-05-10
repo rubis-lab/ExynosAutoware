@@ -1,25 +1,12 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>custom_msgs</name>
+  <name>nmea_navsat</name>
   <version>1.12.0</version>
-  <description>
-    This package defines custom Xsens sensor sample format message to be
-    used only with the MTdata2 format.
-  </description>
-  <maintainer email="tfoote@osrfoundation.org">Tully Foote</maintainer>
-  <license>BSD</license>
+  <description>The nmea_navsat package</description>
+  <maintainer email="kondoh@axe-inc.co.jp">Masao KONDOH</maintainer>
+  <license>Apache 2</license>
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>message_generation</build_depend>
-
-  <depend>geometry_msgs</depend>
-  <depend>sensor_msgs</depend>
-  <depend>std_msgs</depend>
-
-  <exec_depend>message_runtime</exec_depend>
-  
-  <export>
-    <architecture_independent />
-  </export>
+  <exec_depend>nmea_navsat_driver</exec_depend>
 </package>

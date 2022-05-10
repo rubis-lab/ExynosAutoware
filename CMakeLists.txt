@@ -1,35 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(custom_msgs)
+project(nmea_navsat)
 
-find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
-  message_generation
-  sensor_msgs
-  std_msgs
-)
+find_package(catkin REQUIRED COMPONENTS nmea_navsat_driver)
 
-add_message_files(
- FILES
-   BaroSensorSample.msg
-   GnssSensorSample.msg
-   ImuSensorSample.msg
-   Internal.msg
-   XsensQuaternion.msg
-   baroSample.msg
-   gnssSample.msg
-   orientationEstimate.msg
-   positionEstimate.msg       
-   sensorSample.msg
-   velocityEstimate.msg
- )
+catkin_package()
 
-generate_messages(
- DEPENDENCIES
-   geometry_msgs
-   sensor_msgs
-   std_msgs  
- )
+#add_executable(javad_tty nodes/javad_tty/javad_tty.cpp)
+#target_link_libraries(javad_tty
+#   ${catkin_LIBRARIES}
+#)
 
-catkin_package(
-  CATKIN_DEPENDS message_runtime
+install(DIRECTORY scripts/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  PATTERN ".svn" EXCLUDE
 )
