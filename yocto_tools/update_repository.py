@@ -52,12 +52,6 @@ def remove_copied_source_codes():
     os.system('sudo rm -r ../rubis_ws')
     return
 
-def tmp_exit():
-    os.system('git checkout -f master')
-    os.system('git reset --hard')
-    remove_copied_source_codes()
-    exit()
-
 def main():
     null_command = ' > /dev/null 2>&1'
 
@@ -124,9 +118,9 @@ def main():
             os.system('git push origin '+package+null_command)
         print(package+' is updated')
         
-    tmp_exit()
-
-    
+    os.system('git checkout -f master')
+    os.system('git reset --hard')
+    remove_copied_source_codes()
 
     return
 
