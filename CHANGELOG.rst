@@ -1,6 +1,6 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package hokuyo
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package vlg22c_cam
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.11.0 (2019-03-21)
 -------------------
@@ -35,7 +35,8 @@ Changelog for package hokuyo
   * Fixed params installation path
   * Fixed cfg installation path
   * Delete cache on colcon_release
-* Contributors: Abraham Monrroy Cano
+* Fix license notice in corresponding package.xml
+* Contributors: Abraham Monrroy Cano, amc-nu
 
 1.10.0 (2019-01-17)
 -------------------
@@ -61,18 +62,26 @@ Changelog for package hokuyo
 ------------------
 * [Fix] Moved C++11 flag to autoware_build_flags (`#1395 <https://github.com/CPFL/Autoware/pull/1395>`_)
 * [Feature] Makes sure that all binaries have their dependencies linked (`#1385 <https://github.com/CPFL/Autoware/pull/1385>`_)
+* Added ID for multiple camera frames (`#1296 <https://github.com/CPFL/Autoware/pull/1296>`_)
+  * Added ID for multiple camera frames
+  * Fixed indexing for Ladybug camera
+  * Fixed camera index on grasshopper
 * [Fix] Extend and Update interface.yaml (`#1291 <https://github.com/CPFL/Autoware/pull/1291>`_)
-* Contributors: Esteve Fernandez, Kenji Funaoka
+* Contributors: Abraham Monrroy, Esteve Fernandez, Kenji Funaoka
 
 1.7.0 (2018-05-18)
 ------------------
 * update Version from 1.6.3 to 1.7.0 in package.xml and CHANGELOG.rst
-* [update] Hokuyo 2D driver update (`#1091 <https://github.com/CPFL/Autoware/pull/1091>`_)
-  * Replaced outdated Hokuyo node with new urg_node
-  * Added description to RTM
-  * Updated Hokuyo3D, added RTM UI for both 2D and 3D Hokuyo nodes
-  * Requested changes attended
-* Contributors: Abraham Monrroy, Kosuke Murakami
+* Editorial changes to README files. See `#1124 <https://github.com/CPFL/Autoware/pull/1124>`_. (`#1125 <https://github.com/CPFL/Autoware/pull/1125>`_)
+* [feature] Grasshopper3 node modified to set the mode and pixel format (`#1105 <https://github.com/CPFL/Autoware/pull/1105>`_)
+  * Grasshopper3 node modified to set the mode and pixel format
+  * Baumer Type Readme
+  * Baumer Auto Exposure Algorithm improvement
+  * Added Documentation to the package
+  * Added runtime manager param controls for both Ladybug and Grasshopper nodes
+* Added missing param to launch file
+* Added Autoexposure, documentation to the Baumer camera node
+* Contributors: AMC, Abraham Monrroy, David, Kosuke Murakami
 
 1.6.3 (2018-03-06)
 ------------------
@@ -135,8 +144,5 @@ Changelog for package hokuyo
 
 1.0.0 (2016-12-22)
 ------------------
-* Add module graph tool
-* Use c++11 option instead of c++0x
-  We can use newer compilers which support 'c++11' option
 * Initial commit for public release
-* Contributors: Shinpei Kato, Syohei YOSHIDA, USUDA Hisashi
+* Contributors: Shinpei Kato
