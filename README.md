@@ -1,43 +1,81 @@
-# How to use gnss_converter (/gnss_pose publisher)
-### Case 1 : If you create a new map
-* Record /Inertial_Labs/gps_data, /Inertial_Labs/ins_data, /ndt_pose, /ndt_stat data while driving through the map (rosbag)
-```console
-~$ rosbag record /ndt_pose /ndt_stat /Inertial_Labs/gps_data /Inertial_Labs/ins_data -O [NAME]
-```
-* Set /gnss_converter/calculate_tf of gnss_converter/cfg/gnsss_converter.yaml to true.
-```yaml
-/gnss_converter/calculate_tf : true
-```
-* Set /gnss_converter/bag_file_path of gnss_converter/cfg/gnsss_converter.yaml to recorded rosbag file.
-```yaml
-/gnss_converter/bag_file_path : /home/sunhokim/Documents/RUBIS/data/220111_pose_gnss_138ground.bag   # example
-```
-* Run the following code
-```console
-~$ roslaunch gnss_converter gnss_converter.launch
-```
-* Wait about 40 seconds and a image showing the route of the vehicle will appear on the screen.
-* You can select the four points used to calculate the transformation matrix through the following method.
-  - To change the image size, use track bar to select a value and press enter.
-  - If you want to choose a point, press the number and click the point in the image. (RBUTTONDOWN)
-  - If you want to end, press the ESC button.
-  - **WARNING** : When performing angle transformation, linear transformation was assumed. However, since the angle has a value between -180 degrees and +180 degrees, if there is a discontinuous interval between the four points, the matrix is not properly calculated. Therefore, when selecting four points, it is necessary to make sure that there is no section where the change in angle is discontinuous. (If the first value of the ori_tf matrix is close to -1.0, the calculation was performed well.)
-* After the previous process, the transformation matrix calculation result is displayed on the screen.
-* The calculation result is transferred to gnss_converter/cfg/gnss_converter.yaml.
-```yaml
-# ========= position tf matrix =========
-/gnss_converter/pos_tf : [-1.372640, -1.384772, -27.949656, 13944.211735, 0.410968, -0.109160, -11.105078, -9490.840625, -0.318483, -0.086243, -6.272676, 453.012563, 0.000000, -0.000000, 0.000000, 1.000000] 
+# RUBIS CAN Interface
 
-# ========= orientation tf matrix =========
-/gnss_converter/ori_tf : [-1.000448, 0.345540, 0.569044, 0.987319, 0.021691, -2.279683, -4.681593, -0.067717, 0.056971, 1.608331, -3.444783, -0.114943, 0.000000, -0.000000, 0.000000, 1.000000]
+## **Installation**
+
+This package needs Kvaser interface package. And the kvaser_interface package depends on the Kvaser CANLIB API. You can install the Kvaser CANLIB from source directly from Kvaser, however the easiest way to install is using our ppa which distributes them as deb packages:
+
 ```
-* Move to Case 2
-### Case 2 : If you've already done Case 1
-* Set /gnss_converter/calculate_tf of gnss_converter/cfg/gnsss_converter.yaml to false.
-```yaml
-/gnss_converter/calculate_tf : false
+sudo apt-add-repository ppa:astuff/kvaser-linux
+sudo apt update
+sudo apt install kvaser-canlib-dev kvaser-drivers-dkms
 ```
-* Execute gnss_converter launch file.
-```console
-~$ roslaunch gnss_converter gnss_converter.launch
+
+Now that the dependencies are installed, we can install kvaser_interface:
+
 ```
+sudo apt install apt-transport-https
+sudo sh -c 'echo "deb [trusted=yes] https://s3.amazonaws.com/autonomoustuff-repo/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/autonomoustuff-public.list'
+sudo apt update
+sudo apt install ros-$ROS_DISTRO-kvaser-interface
+```
+
+### **Now you are ready to build the RUBIS CAN interface package**
+
+* Build packages
+```
+cd ${WORKSPACE_DIR}
+catkin_make
+```
+
+* source packages
+```
+source ${WORKSPACE_DIR}/devel/setup.sh
+```
+
+# The `can_traslate` Node
+This package generates two messages and translates CAN data from the ECU Gateway. You can use the messages by including the header <can_data_msgs/Car_output.h> and <can_data_msgs/Car_input.h>
+
+## **SUBSCRIBE TOPIC**
+
+<!-- ### can_tx [can_msgs::Frame]
+
+This topic is subscribed by the node. It expects to have other nodes subscribe to it to receive data which are *sent by the CAN device*. -->
+
+### car_ctrl_input [can_data_msgs::Car_ctrl_input] // Board -> Vehicle
+
+This topic is subscribed to by the node. This topic contains a vehicle control data.
+```
+    int set_accel;
+    int set_steering;
+    double angle_filter_hz;
+    double steering_angle; # steering wheel angle
+    double acceleration;   
+```
+
+## **PUBLISH TOPIC**
+
+<!-- ### can_rx [can_msgs::Frame]
+
+This topic is published to by the node. It expects to have data published to it which are intended to be *received by the CAN device*. -->
+
+### car_ctrl_output [can_data_msgs::Car_ctrl_output] // Vehicle -> Board
+
+This topic is publish the translated data from the CAN.
+```
+    int accel_status;
+    int steering_status;
+    int steering_ctrl_override;
+    int steering_error;
+    int turn_indicator;
+    int accel_override;
+    int brake_override;
+    double steering_angle; # steering wheel angle
+    double real_speed;
+    double ctrl_accel;
+    int gear;
+    int alive_count;
+```
+
+
+
+
