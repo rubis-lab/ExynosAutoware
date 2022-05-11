@@ -1,29 +1,37 @@
 <?xml version="1.0"?>
-<package format="2">
-  <name>rubis_autorunner</name>
-  <version>0.0.0</version>
-  <description>The rubis_autorunner package</description>
+<package>
+  <name>vesc_driver</name>
+  <version>0.0.1</version>
+  <description>
+    ROS device driver for the Vedder VESC open source motor driver.
+  </description>
 
-  <maintainer email="jwhan@todo.todo">jwhan</maintainer>
+  <maintainer email="boulet@ll.mit.edu">Michael T. Boulet</maintainer>
+  <author email="boulet@ll.mit.edu">Michael T. Boulet</author>
+  <license>BSD</license>
 
-  <license>TODO</license>
-
+  <url type="website">http://www.ros.org/wiki/vesc_driver</url>
+  <url type="repository">https://github.mit.edu/racecar/vesc</url>
+  <url type="bugtracker">https://github.mit.edu/racecar/vesc/issues</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>autoware_msgs</build_depend>
+
+  <build_depend>nodelet</build_depend>
+  <build_depend>pluginlib</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
-  <build_export_depend>autoware_msgs</build_export_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <build_export_depend>std_msgs</build_export_depend>
-  <exec_depend>autoware_msgs</exec_depend>
-  <exec_depend>roscpp</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
+  <build_depend>vesc_msgs</build_depend>
+  <build_depend>serial</build_depend>
 
+  <run_depend>nodelet</run_depend>
+  <run_depend>pluginlib</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>vesc_msgs</run_depend>
+  <run_depend>serial</run_depend>
 
-  <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- Other tools can request additional information be placed here -->
-
+    <nodelet plugin="${prefix}/vesc_driver_nodelet.xml"/>
   </export>
+
 </package>
