@@ -1,45 +1,43 @@
+<?xml version="1.0"?>
 <package>
-  <name>topic_tools</name>
-  <version>1.15.11</version>
+  <name>vesc_ackermann</name>
+  <version>0.0.1</version>
   <description>
-    Tools for directing, throttling, selecting, and otherwise messing with
-    ROS topics at a meta level. None of the programs in this package actually
-    know about the topics whose streams they are altering; instead, these
-    tools deal with messages as generic binary blobs. This means they can be
-    applied to any ROS topic.
+    Translate between VESC messages and ROS ackermann and odometry messages.
   </description>
-  <maintainer email="jacob@openrobotics.org">Jacob Perron</maintainer>
-  <maintainer email="michael@openrobotics.org">Michael Carroll</maintainer>
-  <maintainer email="sloretz@openrobotics.org">Shane Loretz</maintainer>
+
+  <maintainer email="boulet@ll.mit.edu">Michael T. Boulet</maintainer>
+  <author email="boulet@ll.mit.edu">Michael T. Boulet</author>
   <license>BSD</license>
 
-  <url>http://ros.org/wiki/topic_tools</url>
-  <author>Morgan Quigley</author>
-  <author>Brian Gerkey</author>
-  <author email="dthomas@osrfoundation.org">Dirk Thomas</author>
+  <url type="website">http://www.ros.org/wiki/vesc_ackermann</url>
+  <url type="repository">https://github.mit.edu/racecar/racecar-iap</url>
+  <url type="bugtracker">https://github.mit.edu/racecar/racecar-iap/issues</url>
 
-  <buildtool_depend version_gte="0.5.78">catkin</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>cpp_common</build_depend>
-  <build_depend>message_generation</build_depend>
-  <build_depend>rosconsole</build_depend>
+  <build_depend>nodelet</build_depend>
+  <build_depend>pluginlib</build_depend>
   <build_depend>roscpp</build_depend>
-  <build_depend>rostest</build_depend>
-  <build_depend>rostime</build_depend>
-  <build_depend>rosunit</build_depend>
+  <build_depend>nav_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
-  <build_depend>xmlrpcpp</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>ackermann_msgs</build_depend>
+  <build_depend>vesc_msgs</build_depend>
 
-  <run_depend>message_runtime</run_depend>
-  <run_depend>rosconsole</run_depend>
+  <run_depend>nodelet</run_depend>
+  <run_depend>pluginlib</run_depend>
   <run_depend>roscpp</run_depend>
-  <run_depend>rostime</run_depend>
+  <run_depend>nav_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
-  <run_depend>xmlrpcpp</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>ackermann_msgs</run_depend>
+  <run_depend>vesc_msgs</run_depend>
 
-  <test_depend>rosbash</test_depend>
-  <!--
-  tests need this dependency but rostopic dep. on rosbag deps. on topic_tools
-  <test_depend>rostopic</test_depend>
-  -->
+  <export>
+    <nodelet plugin="${prefix}/vesc_ackermann_nodelet.xml"/>
+  </export>
+
 </package>
