@@ -1,39 +1,36 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(camera_info_manager)
+project(rubis_logger)
 
-find_package(catkin REQUIRED COMPONENTS camera_calibration_parsers image_transport roscpp roslib sensor_msgs)
+find_package(catkin REQUIRED)
 
-find_package(Boost)
-catkin_package(INCLUDE_DIRS include
-               LIBRARIES ${PROJECT_NAME}
-               CATKIN_DEPENDS camera_calibration_parsers
-               DEPENDS Boost roscpp sensor_msgs
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  autoware_msgs
+  geometry_msgs
+  can_data_msgs
+  std_msgs
+  nav_msgs
+  rubis_logger_msgs
 )
 
-include_directories(include)
-include_directories(${catkin_INCLUDE_DIRS})
-
-# add a library
-add_library(${PROJECT_NAME} src/camera_info_manager.cpp)
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
-
-install(TARGETS ${PROJECT_NAME}
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-        COMPONENT main
-)
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES rubis_logger
+#  CATKIN_DEPENDS other_catkin_pkg
+#  DEPENDS system_lib
 )
 
-if(CATKIN_ENABLE_TESTING)
-  find_package(rostest)
-  # Unit test uses gtest, but needs rostest to create a ROS environment.
-  # Hence, it must be created as a normal executable, not using
-  # catkin_add_gtest() which runs an additional test without rostest.
-  add_executable(unit_test tests/unit_test.cpp)
-  target_link_libraries(unit_test ${PROJECT_NAME} ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
+include_directories(
+  include ${catkin_INCLUDE_DIRS}
+# include
+# ${catkin_INCLUDE_DIRS}
+)
 
-  add_rostest(tests/unit_test.test DEPENDENCIES unit_test)
-endif()
+add_executable(rubis_logger
+  include/rubis_logger/rubis_logger.h
+  src/rubis_logger.cpp
+)
+add_dependencies(rubis_logger ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rubis_logger
+  ${catkin_LIBRARIES}
+)
