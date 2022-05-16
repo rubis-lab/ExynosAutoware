@@ -22,8 +22,6 @@
 #include <message_filters/sync_policies/approximate_time.h>
 #include <message_filters/sync_policies/exact_time.h>
 
-#include <opencv2/opencv.hpp>
-
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
