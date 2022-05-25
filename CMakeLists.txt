@@ -19,8 +19,6 @@ find_package(catkin REQUIRED COMPONENTS
   tf
 )
 
-find_package(OpenCV REQUIRED)
-
 find_package(Eigen3 REQUIRED)
 set(EIGEN_PACKAGE EIGEN3)
 if(NOT EIGEN3_FOUND)
@@ -31,6 +29,7 @@ if(NOT EIGEN3_FOUND)
   set(EIGEN_PACKAGE Eigen)
 endif()
 
+find_package(OpenCV REQUIRED)
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -42,6 +41,7 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 
@@ -72,4 +72,26 @@ target_link_libraries(gnss_pose_pub
   ${catkin_LIBRARIES}
   ${EIGEN3_LIBRARIES}
   ${OpenCV_LIBS}
+)
+
+install(
+  TARGETS
+    gnss_converter
+    gnss_pose_pub
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  PATTERN ".svn" EXCLUDE
+)
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  PATTERN ".svn" EXCLUDE
+)
+
+install(DIRECTORY cfg/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/cfg
 )
