@@ -1,217 +1,357 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package image_transport
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package vision_yolo3_detect
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.12.0 (2020-04-03)
+1.11.0 (2019-03-21)
 -------------------
-* Noetic release image_common (`#155 <https://github.com/ros-perception/image_common/issues/155>`_)
-* Contributors: Alejandro Hernández Cordero
+* Removing CUDA dependencies for Darknet Yolov3 (`#1784 <https://github.com/CPFL/Autoware/issues/1784>`_)
+  * Removing CUDA dependencies for Darknet yolov3
+  If the host machine does not have CUDA, this will build the vision_darknet_detect package based on a pre-built darknet directory (which doesn't require CUDA as there are no CUDA dependencies for yolov3).
+  * Update ros/src/computing/perception/detection/vision_detector/packages/vision_darknet_detect/CMakeLists.txt
+  Co-Authored-By: K1504296 <greytrt@gmail.com>
+* Fix license notice in corresponding package.xml
+* Initial release of object filter
+* Contributors: Abraham Monrroy, Theodore, amc-nu
 
-1.11.14 (2020-04-03)
---------------------
-* export runtime binaries correctly on Windows (`#116 <https://github.com/ros-perception/image_common/issues/116>`_)
-* add DLL import/export macro (`#118 <https://github.com/ros-perception/image_common/issues/118>`_)
-* Contributors: James Xu
-
-1.11.13 (2017-11-05)
---------------------
-* Disable image publisher plugins by name (`#60 <https://github.com/ros-perception/image_common/issues/60>`_)
-  * Disable publisher plugins by name
-  * Now have per publisher blacklist instead of image_transport wide.
-* update to use non deprecated pluginlib macro
-* Extend documentation of `getCameraInfoTopic`
-  Document the fact that the `base_topic` argument must be resolved in order to build the correct camera info topic.
-* Added cv::waitkey(10) for blank popup
-  Without the cv::waitkey(10), it results in a blank popup which crashes/ leads to a black popup. This change corrects that problem.
-  ROS Kinetic, Ubuntu 16.04.3
-* Contributors: Aaditya Saraiya, Lucas Walter, Mikael Arguedas, Thibaud Chupin, Vincent Rabaud
-
-1.11.12 (2017-01-29)
---------------------
-* Fix CMake of image_transport/tutorial and polled_camera
-  Fix loads of problems with the CMakeLists.
-* image_transport/tutorial: Add dependency on generated msg
-  Without this, build fails on Kinetic because ResizedImage.h has not been
-  generated yet.
-* image_transport/tutorial: Add missing catkin_INCLUDE_DIRS
-  Without this, compilation files on Kinetic because ros.h cannot be found.
-* 1.11.11
-* update changelogs
-* Contributors: Martin Guenther, Vincent Rabaud
-
-1.11.11 (2016-09-24)
---------------------
-
-1.11.10 (2016-01-19)
---------------------
-
-1.11.9 (2016-01-17)
+1.10.0 (2019-01-17)
 -------------------
-* fix linkage in tutorials
-* Use $catkin_EXPORTED_TARGETS
-* Contributors: Jochen Sprickerhof, Vincent Rabaud
+* Fixes for catkin_make
+* [fix] SSD detector, cmake colcon (`#1837 <https://github.com/CPFL/Autoware/issues/1837>`_)
+  * Fixes for new colcon script on ssd cuda based node
+  * Fixed to RTM and darknet launch files
+  * catkin_fix
+  * * catkin & colcon build successfully
+  * reverted back run to devel space (for the time being)
+* Switch to Apache 2 license (develop branch) (`#1741 <https://github.com/CPFL/Autoware/issues/1741>`_)
+  * Switch to Apache 2
+  * Replace BSD-3 license header with Apache 2 and reassign copyright to the
+  Autoware Foundation.
+  * Update license on Python files
+  * Update copyright years
+  * Add #ifndef/define _POINTS_IMAGE_H\_
+  * Updated license comment
+* Use colcon as the build tool (`#1704 <https://github.com/CPFL/Autoware/issues/1704>`_)
+  * Switch to colcon as the build tool instead of catkin
+  * Added cmake-target
+  * Added note about the second colcon call
+  * Added warning about catkin* scripts being deprecated
+  * Fix COLCON_OPTS
+  * Added install targets
+  * Update Docker image tags
+  * Message packages fixes
+  * Fix missing dependency
+* Feature/perception visualization cleanup (`#1648 <https://github.com/CPFL/Autoware/issues/1648>`_)
+  * * Initial commit for visualization package
+  * Removal of all visualization messages from perception nodes
+  * Visualization dependency removal
+  * Launch file modification
+  * * Fixes to visualization
+  * Error on Clustering CPU
+  * Reduce verbosity on markers
+  * intial commit
+  * * Changed to 2 spaces indentation
+  * Added README
+  * Fixed README messages type
+  * 2 space indenting
+  * ros clang format
+  * Publish acceleration and velocity from ukf tracker
+  * Remove hardcoded path
+  * Updated README
+  * updated prototype
+  * Prototype update for header and usage
+  * Removed unknown label from being reported
+  * Updated publishing orientation to match develop
+  * * Published all the trackers
+  * Added valid field for visualization and future compatibility with ADAS ROI filtering
+  * Add simple functions
+  * Refacor code
+  * * Reversed back UKF node to develop
+  * Formatted speed
+  * Refactor codes
+  * Refactor codes
+  * Refactor codes
+  * Refacor codes
+  * Make tracking visualization work
+  * Relay class info in tracker node
+  * Remove dependency to jskbbox and rosmarker in ukf tracker
+  * apply rosclang to ukf tracker
+  * Refactor codes
+  * Refactor codes
+  * add comment
+  * refactor codes
+  * Revert "Refactor codes"
+  This reverts commit 135aaac46e49cb18d9b76611576747efab3caf9c.
+  * Revert "apply rosclang to ukf tracker"
+  This reverts commit 4f8d1cb5c8263a491f92ae5321e5080cb34b7b9c.
+  * Revert "Remove dependency to jskbbox and rosmarker in ukf tracker"
+  This reverts commit 4fa1dd40ba58065f7afacc5e478001078925b27d.
+  * Revert "Relay class info in tracker node"
+  This reverts commit 1637baac44c8d3d414cc069f3af12a79770439ae.
+  * delete dependency to jsk and remove pointcloud_frame
+  * get direction nis
+  * set velocity_reliable true in tracker node
+  * Add divided function
+  * add function
+  * Sanity checks
+  * Relay all the data from input DetectedObject
+  * Divided function work both for immukf and sukf
+  * Add comment
+  * Refactor codes
+  * Pass immukf test
+  * make direction assisted tracking work
+  * Visualization fixes
+  * Refacor codes
+  * Refactor codes
+  * Refactor codes
+  * refactor codes
+  * refactor codes
+  * Refactor codes
+  * refactor codes
+  * Tracker Merging step added
+  * Added launch file support for merging phase
+  * lane assisted with sukf
+  * Refactor codes
+  * Refactor codes
+  * * change only static objects
+  * keep label of the oldest tracker
+  * Static Object discrimination
+  * Non rotating bouding box
+  * no disappear if detector works
+  * Modify removeRedundant a bit
+  * Replacement of JSK visualization for RViz Native Markers
+  * Added Models namespace to visualization
+  * Naming change for matching the perception component graph
+  * * Added 3D Models for different classes in visualization
+  * 2D Rect node visualize_rects added to visualization_package
+* Fix Ros/ROS naming convention
+* Fix Ssd/SSD naming convention
+* Contributors: Abraham Monrroy Cano, Esteve Fernandez, amc-nu
 
-1.11.8 (2015-11-29)
--------------------
-
-1.11.7 (2015-07-28)
--------------------
-
-1.11.6 (2015-07-16)
--------------------
-
-1.11.5 (2015-05-14)
--------------------
-* image_transport: fix CameraSubscriber shutdown (circular shared_ptr ref)
-  CameraSubscriber uses a private boost::shared_ptr to share an impl object
-  between copied instances. In CameraSubscriber::CameraSubscriber(), it
-  handed this shared_ptr to boost::bind() and saved the created wall timer
-  in the impl object, thus creating a circular reference. The impl object
-  was therefore never freed.
-  Fix that by passing a plain pointer to boost::bind().
-* avoid a memory copy for the raw publisher
-* add a way to publish an image with only the data pointer
-* Make function inline to avoid duplicated names when linking statically
-* add plugin examples for the tutorial
-* update instructions for catkin
-* remove uselessly linked library
-  fixes `#28 <https://github.com/ros-perception/image_common/issues/28>`_
-* add a tutorial for image_transport
-* Contributors: Gary Servin, Max Schwarz, Vincent Rabaud
-
-1.11.4 (2014-09-21)
--------------------
-
-1.11.3 (2014-05-19)
--------------------
-
-1.11.2 (2014-02-13)
--------------------
-
-1.11.1 (2014-01-26 02:33)
--------------------------
-
-1.11.0 (2013-07-20 12:23)
--------------------------
-
-1.10.5 (2014-01-26 02:34)
--------------------------
-
-1.10.4 (2013-07-20 11:42)
--------------------------
-* add Jack as maintainer
-* update my email address
-* Contributors: Vincent Rabaud
-
-1.10.3 (2013-02-21 05:33)
--------------------------
-
-1.10.2 (2013-02-21 04:48)
--------------------------
-
-1.10.1 (2013-02-21 04:16)
--------------------------
-
-1.10.0 (2013-01-13)
--------------------
-* fix the urls
-* use the pluginlib script to remove some warnings
-* added license headers to various cpp and h files
-* Contributors: Aaron Blasdel, Vincent Rabaud
-
-1.9.22 (2012-12-16)
--------------------
-* get rid of the deprecated class_loader interface
-* Contributors: Vincent Rabaud
-
-1.9.21 (2012-12-14)
--------------------
-* CMakeLists.txt clean up
-* Updated package.xml file(s) to handle new catkin buildtool_depend
-  requirement
-* Contributors: William Woodall, mirzashah
-
-1.9.20 (2012-12-04)
--------------------
-
-1.9.19 (2012-11-08)
--------------------
-* add the right link libraries
-* Contributors: Vincent Rabaud
-
-1.9.18 (2012-11-06)
--------------------
-* Isolated plugins into their own library to follow new
-  class_loader/pluginlib guidelines.
-* remove the brief attribute
-* Contributors: Mirza Shah, Vincent Rabaud
-
-1.9.17 (2012-10-30 19:32)
--------------------------
-
-1.9.16 (2012-10-30 09:10)
--------------------------
-* add xml file
-* Contributors: Vincent Rabaud
-
-1.9.15 (2012-10-13 08:43)
--------------------------
-* fix bad folder/libraries
-* Contributors: Vincent Rabaud
-
-1.9.14 (2012-10-13 01:07)
--------------------------
-
-1.9.13 (2012-10-06)
--------------------
-
-1.9.12 (2012-10-04)
--------------------
-
-1.9.11 (2012-10-02 02:56)
--------------------------
-
-1.9.10 (2012-10-02 02:42)
--------------------------
-
-1.9.9 (2012-10-01)
-------------------
-* fix dependencies
-* Contributors: Vincent Rabaud
-
-1.9.8 (2012-09-30)
-------------------
-* add catkin as a dependency
-* comply to the catkin API
-* Contributors: Vincent Rabaud
-
-1.9.7 (2012-09-18 11:39)
-------------------------
-
-1.9.6 (2012-09-18 11:07)
-------------------------
-
-1.9.5 (2012-09-13)
-------------------
-* install the include directories
-* Contributors: Vincent Rabaud
-
-1.9.4 (2012-09-12 23:37)
-------------------------
-
-1.9.3 (2012-09-12 20:44)
-------------------------
-
-1.9.2 (2012-09-10)
+1.9.1 (2018-11-06)
 ------------------
 
-1.9.1 (2012-09-07 15:33)
-------------------------
-* make the libraries public
-* Contributors: Vincent Rabaud
+1.9.0 (2018-10-31)
+------------------
+* Fix compile error (vision_darknet_detect.h:52:37: fatal error: autoware_msgs/ConfigSsd.h: No such file or directory)
+* Moved configuration messages to autoware_config_msgs
+* include fstream header (`#1608 <https://github.com/CPFL/Autoware/issues/1608>`_)
+* Added support for custom class "names files" in darknet format. (`#1535 <https://github.com/CPFL/Autoware/issues/1535>`_)
+  * Added support for custom class "names files" in darknet format.
+  * Fixed launch file, not including source topic arg
+  * Fix the default path of coco.names (`#1550 <https://github.com/CPFL/Autoware/issues/1550>`_)
+* fixes two typos in yolo class name/id file (`#1484 <https://github.com/CPFL/Autoware/issues/1484>`_)
+* Contributors: Abraham Monrroy, Esteve Fernandez, Jacob Lambert, Kenji Funaoka
 
-1.9.0 (2012-09-07 13:03)
+1.8.0 (2018-08-31)
+------------------
+* fixes two typos in yolo class name/id file (`#1486 <https://github.com/CPFL/Autoware/pull/1486>`_)
+* [Fix] README.md of vision_darknet_detect (`#1437 <https://github.com/CPFL/Autoware/pull/1437>`_)
+* Feature/std perception msg (`#1418 <https://github.com/CPFL/Autoware/pull/1418>`_)
+  * New standard message definition for the perception nodes
+  * New Detected Object message applied to:
+  * SSD
+  * Integrated RVIZ viewer
+  * External Viewer
+  * modified yolo2 and yolo3, compiles but cuda issues, trying different PC
+  * Boiler plate for range vision fusion node
+  * Added GenColors for Kinetic
+  Typo fixes for yolo2
+  * testing colors in Yolo3
+  * Completed transformation, projection of 3D boxes
+  * Fixed error on negative assignation
+  * code clean up
+  * removed yolo2 and yolo3, replaced by single darknet node. GUI launches yolo3 for now, to change. Pushing to test code on other PC.
+  * Readme updated, added gitignore for data folder.
+  * *Added Runtime manager UI for yolo2, yolo3.
+  *Support tested for TinyYolo v2 and v3
+  * Fusion Vision Range
+  Icons for viewer
+  * Range Vision Fusion node
+  * Indigo cv im read
+  * Indigo compiation fix
+  * Topic renaming according to new spec
+  * Try to fix arm64 stuff
+  * * Added launch file
+  * Added Runtime manager entry
+  * * Added Publication of non fused objects
+  * Fixed topic names
+* Contributors: Abraham Monrroy, Kenji Funaoka
+
+1.7.0 (2018-05-16)
+------------------
+* Add  code in cmakelists
+* update Version from 1.6.3 to 1.7.0 in package.xml and CHANGELOG.rst
+* Remove history of sub-branches
+* Add automatically-generated CHANGELOG.rst
+* [Fix] rename packages (`#1269 <https://github.com/CPFL/Autoware/pull/1269>`_)
+  * rename lidar_tracker
+  * Modify pf_lidar_track's cmake file
+  * Refactor code
+  * Rename from euclidean_lidar_tracker to lidar_euclidean_track
+  * Rename from kf_contour_track to lidar_kf_contour_track
+  * Rename from kf_lidar_track to lidar_kf_track, but need some modification in euclidean cluster(Cluster.h)
+  * Rename from pf_lidar_tarck to lidar_pf_track
+  * Rename range_fusion
+  * Rename obj_reproj
+  * Rename euclidean_cluster to lidar_euclidean_cluster_detect
+  * Rename svm_lidar_detect to lidar_svm_detect
+  * Rename kf_lidar_track to lidar_kf_track
+  * Change version 1.6.3 to 1.7.0 in pacakge.xml
+  * Modify CMake so that extrenal header would be loaded
+  * Remove obj_reproj from cv_tracker
+  * Add interface.yaml
+  * Rename road_wizard to trafficlight_recognizer
+  * create common directory
+  * Add lidar_imm_ukf_pda_track
+  * create vision_detector and moved cv
+  * Modify interface.yaml and package.xml
+  * remove dpm_ocv
+  * moved directory
+  * Delete unnecessary launch file
+  * Delete rcnn related file and code
+  * separated dummy_track from cv_tracker
+  * separated klt_track from cv_tracker
+  * Fix a cmake
+  * Remove unnecessary dependency of lidar_euclidean_cluster_detect package
+  * Rename image_segmenter to vision_segment_enet_detect
+  * Remove unnecessary dependency of lidar_svm_detect package
+  * separated kf_track and fix a some compiling issue
+  * move viewers
+  * merge ndt_localizer and icp_localizer, and rename to lidar_localizer
+  * Remove unnecessary dependency of lidar_euclidean_track
+  * moved image lib
+  * add launch
+  * lib move under lidar_tracker
+  * Rename dpm_ttic to vision_dpm_ttic_detect
+  * rename yolo3detector to vision_yolo3_detect
+  * Modify cmake and package.xml in vision_dpm_ttic_detect
+  * moved sourcefiles into nodes dir
+  * moved sourcefiles into nodes dir
+  * Move cv_tracker/data folder and delete cv_tracker/model folder
+  * fix a package file and cmake
+  * Rename yolo2 -> vision_yolo2_detect
+  * fix a package file and cmake
+  * Fix package name of launch file
+  * Rename ssd to vision_ssd_detect
+  * fixed cmake and package for decerese dependencies
+  * remove top packages dir for detection
+  * fixed cmake for cuda
+  * Rename lane_detector to vision_lane_detect
+  * Modify package.xml in lidar-related packages
+  * Remove unnecessary dependencies in lidar_detector and lidar_tracker
+  * Modify computing.yaml for dpm_ttic
+  * Modify dpm_ttic launch file
+  * Remove/Add dependencies to trafficlight_recognizer
+  * Update data folder in dpm_ttic
+  * Modified CMake and package file in dpm_ttic.
+  * Remove src dir in imm_ukf_pda_track
+  * removed unnecessary comments
+  * rename lidar_tracker
+  * Modify pf_lidar_track's cmake file
+  * Refactor code
+  * Rename from euclidean_lidar_tracker to lidar_euclidean_track
+  * Rename from kf_contour_track to lidar_kf_contour_track
+  * Rename from kf_lidar_track to lidar_kf_track, but need some modification in euclidean cluster(Cluster.h)
+  * Rename from pf_lidar_tarck to lidar_pf_track
+  * Rename range_fusion
+  * Rename obj_reproj
+  * Rename road_wizard to trafficlight_recognizer
+  * Rename euclidean_cluster to lidar_euclidean_cluster_detect
+  * Rename svm_lidar_detect to lidar_svm_detect
+  * Rename kf_lidar_track to lidar_kf_track
+  * Change version 1.6.3 to 1.7.0 in pacakge.xml
+  * Modify CMake so that extrenal header would be loaded
+  * Remove obj_reproj from cv_tracker
+  * Add interface.yaml
+  * create common directory
+  * Add lidar_imm_ukf_pda_track
+  * create vision_detector and moved cv
+  * Modify interface.yaml and package.xml
+  * remove dpm_ocv
+  * moved directory
+  * Delete unnecessary launch file
+  * Delete rcnn related file and code
+  * separated dummy_track from cv_tracker
+  * separated klt_track from cv_tracker
+  * Fix a cmake
+  * Remove unnecessary dependency of lidar_euclidean_cluster_detect package
+  * Rename image_segmenter to vision_segment_enet_detect
+  * Remove unnecessary dependency of lidar_svm_detect package
+  * separated kf_track and fix a some compiling issue
+  * move viewers
+  * merge ndt_localizer and icp_localizer, and rename to lidar_localizer
+  * Remove unnecessary dependency of lidar_euclidean_track
+  * moved image lib
+  * add launch
+  * lib move under lidar_tracker
+  * Rename dpm_ttic to vision_dpm_ttic_detect
+  * rename yolo3detector to vision_yolo3_detect
+  * Modify cmake and package.xml in vision_dpm_ttic_detect
+  * moved sourcefiles into nodes dir
+  * moved sourcefiles into nodes dir
+  * Move cv_tracker/data folder and delete cv_tracker/model folder
+  * fix a package file and cmake
+  * Rename yolo2 -> vision_yolo2_detect
+  * fix a package file and cmake
+  * Fix package name of launch file
+  * Rename ssd to vision_ssd_detect
+  * fixed cmake and package for decerese dependencies
+  * remove top packages dir for detection
+  * fixed cmake for cuda
+  * Rename lane_detector to vision_lane_detect
+  * Modify package.xml in lidar-related packages
+  * Remove unnecessary dependencies in lidar_detector and lidar_tracker
+  * Modify computing.yaml for dpm_ttic
+  * Modify dpm_ttic launch file
+  * Remove/Add dependencies to trafficlight_recognizer
+  * Update data folder in dpm_ttic
+  * Modified CMake and package file in dpm_ttic.
+  * Remove src dir in imm_ukf_pda_track
+  * Fix bug for not starting run time manager
+  * Remove invalid dependency
+* Contributors: Kenji Funaoka, Kosuke Murakami
+
+1.6.3 (2018-03-06)
+------------------
+
+1.6.2 (2018-02-27)
+------------------
+
+1.6.1 (2018-01-20)
+------------------
+
+1.6.0 (2017-12-11)
+------------------
+
+1.5.1 (2017-09-25)
+------------------
+
+1.5.0 (2017-09-21)
+------------------
+
+1.4.0 (2017-08-04)
+------------------
+
+1.3.1 (2017-07-16)
+------------------
+
+1.3.0 (2017-07-14)
+------------------
+
+1.2.0 (2017-06-07)
+------------------
+
+1.1.2 (2017-02-27 23:10)
 ------------------------
-* catkinize for Groovy
-* Initial image_common stack check-in, containing image_transport.
-* Contributors: Vincent Rabaud, gerkey, kwc, mihelich, pmihelich, straszheim, vrabaud
+
+1.1.1 (2017-02-27 22:25)
+------------------------
+
+1.1.0 (2017-02-24)
+------------------
+
+1.0.1 (2017-01-14)
+------------------
+
+1.0.0 (2016-12-22)
+------------------
