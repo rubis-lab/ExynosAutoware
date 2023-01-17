@@ -43,7 +43,7 @@
     <param name="vectormap_frame" value="$(arg vectormap_frame)" />
     <param name="use_sukf" value="$(arg use_sukf)" />
     <param name="use_vectormap" value="$(arg use_map_info)" />
-    <param name="merge_distance_threshold" value="$(arg merge_distance_threshold)" />    
+    <param name="merge_distance_threshold" value="$(arg merge_distance_threshold)" />
   </node>
 
   <node pkg="detected_objects_visualizer" type="visualize_detected_objects" name="ukf_track_visualization_$(arg label)"
