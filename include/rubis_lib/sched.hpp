@@ -55,7 +55,6 @@
 #define TASK_READY 1
 
 namespace rubis {
-namespace sched {
 
 // contains thread-specific arguments
 struct thr_arg {
@@ -94,24 +93,28 @@ struct sched_attr {
 extern int key_id_;
 extern int is_scheduled_;
 extern std::string task_filename_;
-extern int task_state_;
-extern int is_task_ready_;
 
-// Task scheduling
 int sched_setattr(pid_t pid, const struct sched_attr *attr, unsigned int flags);
 int sched_getattr(pid_t pid, struct sched_attr *attr, unsigned int size, unsigned int flags);
-bool set_sched_deadline(int _tid, __u64 _exec_time, __u64 _deadline, __u64 _period);
-void request_task_scheduling(double task_minimum_inter_release_time, double task_execution_time, double task_relative_deadline);
-void yield_task_scheduling();
-void init_task();
-void disable_task();
 
-void get_deadline_list();
+bool set_sched_deadline(int pid, unsigned int exec_time, unsigned int deadline, unsigned int period);
+bool set_sched_fifo(int pid, int priority);
+bool set_sched_fifo(int pid, int priority, int child_priority);
+bool set_sched_rr(int pid, int priority);
+bool set_sched_rr(int pid, int priority, int child_priority);
+
+bool init_task_scheduling(std::string policy, struct sched_attr attr);
+void yield_task_scheduling();
+struct sched_attr create_sched_attr(int priority, int exec_time, int deadline, int period);
+
 void sig_handler(int signum);
 void termination();
 unsigned long get_current_time_us();
 
-} // namespace sched
+std::string get_cmd_output(const char* cmd);
+std::vector<int> get_child_pids(int pid);
+std::vector<std::string> tokenize_string(std::string s, std::string delimiter);
+
 } // namespace rubis
 
 #endif

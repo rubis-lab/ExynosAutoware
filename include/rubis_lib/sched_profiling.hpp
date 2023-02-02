@@ -9,15 +9,10 @@
 #include <string.h>
 #include <iostream>
 #include <cstdlib>
-#include <rubis_lib/common.hpp>
 
 namespace rubis {
-  extern int instance_mode_;
   extern unsigned long instance_;
   extern unsigned long obj_instance_;
-
-namespace sched {
-  extern int task_profiling_flag_;
 
   extern FILE* task_response_time_fp_;
 
@@ -28,8 +23,6 @@ namespace sched {
   void start_task_profiling();
   void stop_task_profiling(unsigned long instance, int state);
   unsigned long get_current_time_ns();
-
-}
 }
 
 #endif
