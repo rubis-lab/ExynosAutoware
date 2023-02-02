@@ -346,7 +346,7 @@ void BehaviorGen::callbackGetLocalTrajectoryCost(const autoware_msgs::LaneConstP
 void BehaviorGen::callbackGetLocalPlannerPath(const rubis_msgs::LaneArrayWithPoseTwistConstPtr& msg)
 {
   // Before spinOnce
-  if(task_profiling_flag_) rubis::sched::start_task_profiling();
+  rubis::start_task_profiling();
   rubis::instance_ = msg->instance;
   rubis::obj_instance_ = msg->obj_instance;
 
@@ -534,10 +534,7 @@ void BehaviorGen::callbackGetLocalPlannerPath(const rubis_msgs::LaneArrayWithPos
   else
     sub_GlobalPlannerPaths = nh.subscribe("/lane_waypoints_array",   1,    &BehaviorGen::callbackGetGlobalPlannerPath,   this);
 
-  if(task_profiling_flag_) rubis::sched::stop_task_profiling(rubis::instance_, rubis::sched::task_state_);
-
-  if(rubis::sched::is_task_ready_ == TASK_NOT_READY) rubis::sched::init_task();
-
+  rubis::stop_task_profiling(rubis::instance_, 0);
 }
 
 void BehaviorGen::callbackGetV2XTrafficLightSignals(const autoware_msgs::RUBISTrafficSignalArray& msg)
@@ -667,7 +664,7 @@ void BehaviorGen::SendLocalPlanningTopics(const rubis_msgs::LaneArrayWithPoseTwi
   pub_LocalPathWithPosePub.publish(final_waypoints_with_pose_twist_msg);
   pub_LocalPath.publish(m_CurrentTrajectoryToSend);
 
-  rubis::sched::task_state_ = TASK_STATE_DONE;
+  
 }
 
 void BehaviorGen::LogLocalPlanningInfo(double dt)
@@ -744,30 +741,30 @@ void BehaviorGen::MainLoop()
 {
   ros::NodeHandle private_nh("~");
 
-  // Scheduling Setup
-  int task_scheduling_flag;  
-  std::string task_response_time_filename;
-  int rate;
-  double task_minimum_inter_release_time;
-  double task_execution_time;
-  double task_relative_deadline; 
-
   m_BehaviorGenerator.m_turnThreshold = m_turnThreshold;
-
   m_sprintSwitch = false;
 
-  private_nh.param<int>("/op_behavior_selector/task_scheduling_flag", task_scheduling_flag, 0);
-  private_nh.param<int>("/op_behavior_selector/task_profiling_flag", task_profiling_flag_, 0);
-  private_nh.param<std::string>("/op_behavior_selector/task_response_time_filename", task_response_time_filename, "~/Documents/profiling/response_time/op_behavior_selector.csv");
-  private_nh.param<int>("/op_behavior_selector/rate", rate, 10);
-  private_nh.param("/op_behavior_selector/task_minimum_inter_release_time", task_minimum_inter_release_time, (double)10);
-  private_nh.param("/op_behavior_selector/task_execution_time", task_execution_time, (double)10);
-  private_nh.param("/op_behavior_selector/task_relative_deadline", task_relative_deadline, (double)10);
+  // Scheduling & Profiling Setup
+  std::string node_name = ros::this_node::getName();
+  std::string task_response_time_filename;
+  private_nh.param<std::string>(node_name+"/task_response_time_filename", task_response_time_filename, "~/Documents/profiling/response_time/op_behavior_selector.csv");
 
-  /* For Task scheduling */
-  if(task_profiling_flag_) rubis::sched::init_task_profiling(task_response_time_filename);
+  int rate;
+  private_nh.param<int>(node_name+"/rate", rate, 10);
 
-  m_sprintSwitch = false;
+  struct rubis::sched_attr attr;
+  std::string policy;
+  int priority, exec_time ,deadline, period;
+    
+  private_nh.param(node_name+"/task_scheduling_configs/policy", policy, std::string("NONE"));    
+  private_nh.param(node_name+"/task_scheduling_configs/priority", priority, 99);
+  private_nh.param(node_name+"/task_scheduling_configs/exec_time", exec_time, 0);
+  private_nh.param(node_name+"/task_scheduling_configs/deadline", deadline, 0);
+  private_nh.param(node_name+"/task_scheduling_configs/period", period, 0);
+  attr = rubis::create_sched_attr(priority, exec_time, deadline, period);    
+  rubis::init_task_scheduling(policy, attr);
+
+  rubis::init_task_profiling(task_response_time_filename);
 
   ros::spin();
 }

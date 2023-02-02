@@ -157,8 +157,6 @@ void TrajectoryEval::UpdatePlanningParams(ros::NodeHandle& _nh)
 //     m_VehicleStatus.steer = atan(m_CarInfo.wheel_base * msg->twist.angular.z/msg->twist.linear.x);
 //   UtilityHNS::UtilityH::GetTickCount(m_VehicleStatus.tStamp);
 //   bVehicleStatus = true;
-
-//   if(rubis::sched::is_task_ready_ == TASK_NOT_READY) rubis::sched::init_task();
 // }
 
 void TrajectoryEval::callbackGetCANInfo(const autoware_can_msgs::CANInfoConstPtr &msg)
@@ -338,7 +336,7 @@ void TrajectoryEval::callbackGetLocalPlannerPath(const rubis_msgs::LaneArrayWith
 
       pub_LocalWeightedTrajectoriesWithPoseTwist.publish(local_lanes);
       pub_LocalWeightedTrajectories.publish(local_lanes.lane_array);
-      rubis::sched::task_state_ = TASK_STATE_DONE;
+      
     }
     else
     {
@@ -364,7 +362,7 @@ void TrajectoryEval::callbackGetLocalPlannerPath(const rubis_msgs::LaneArrayWith
     sub_GlobalPlannerPaths = nh.subscribe("/lane_waypoints_array",   1,    &TrajectoryEval::callbackGetGlobalPlannerPath,   this);
 
 
-  if(task_profiling_flag_) rubis::sched::stop_task_profiling(0, rubis::sched::task_state_);  
+  rubis::stop_task_profiling(0, 0);  
 }
 
 void TrajectoryEval::callbackGetPredictedObjects(const rubis_msgs::DetectedObjectArrayConstPtr& msg)
@@ -525,23 +523,27 @@ void TrajectoryEval::MainLoop()
 {
   ros::NodeHandle private_nh("~");
 
-  // Scheduling Setup
-  int task_scheduling_flag;  
+  // Scheduling & Profiling Setup
+  std::string node_name = ros::this_node::getName();
   std::string task_response_time_filename;
+  private_nh.param<std::string>(node_name+"/task_response_time_filename", task_response_time_filename, "~/Documents/profiling/response_time/op_trajectory_evaluator.csv");
+
   int rate;
-  double task_minimum_inter_release_time;
-  double task_execution_time;
-  double task_relative_deadline; 
+  private_nh.param<int>(node_name+"/rate", rate, 10);
 
-  private_nh.param<int>("/op_trajectory_evaluator/task_scheduling_flag", task_scheduling_flag, 0);
-  private_nh.param<int>("/op_trajectory_evaluator/task_profiling_flag", task_profiling_flag_, 0);
-  private_nh.param<std::string>("/op_trajectory_evaluator/task_response_time_filename", task_response_time_filename, "~/Documents/profiling/response_time/op_trajectory_evaluator.csv");
-  private_nh.param<int>("/op_trajectory_evaluator/rate", rate, 10);
-  private_nh.param("/op_trajectory_evaluator/task_minimum_inter_release_time", task_minimum_inter_release_time, (double)10);
-  private_nh.param("/op_trajectory_evaluator/task_execution_time", task_execution_time, (double)10);
-  private_nh.param("/op_trajectory_evaluator/task_relative_deadline", task_relative_deadline, (double)10);  
+  struct rubis::sched_attr attr;
+  std::string policy;
+  int priority, exec_time ,deadline, period;
+    
+  private_nh.param(node_name+"/task_scheduling_configs/policy", policy, std::string("NONE"));    
+  private_nh.param(node_name+"/task_scheduling_configs/priority", priority, 99);
+  private_nh.param(node_name+"/task_scheduling_configs/exec_time", exec_time, 0);
+  private_nh.param(node_name+"/task_scheduling_configs/deadline", deadline, 0);
+  private_nh.param(node_name+"/task_scheduling_configs/period", period, 0);
+  attr = rubis::create_sched_attr(priority, exec_time, deadline, period);    
+  rubis::init_task_scheduling(policy, attr);
 
-  if(task_profiling_flag_) rubis::sched::init_task_profiling(task_response_time_filename);
+  rubis::init_task_profiling(task_response_time_filename);
 
   PlannerHNS::WayPoint prevState, state_change;
 
