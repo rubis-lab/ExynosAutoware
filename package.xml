@@ -1,18 +1,20 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rubis_logger</name>
-  <version>0.0.0</version>
-  <description>The rubis_logger package</description>
-
-  <maintainer email="hypark@todo.todo">hypark</maintainer>
-  <maintainer email="akyeast@gmail.com">dmshin</maintainer>
+  <name>vision_darknet_detect_opencl</name>
+  <version>1.12.0</version>
+  <description>darknet image detector</description>
+  <maintainer email="abrahammonrroy@yahoo.com">Abraham Monrroy</maintainer>
   <license>Apache 2</license>
 
+  <buildtool_depend>autoware_build_flags</buildtool_depend>
   <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>autoware_config_msgs</depend>
   <depend>autoware_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>nav_msgs</depend>
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
   <depend>roscpp</depend>
-  <depend>can_data_msgs</depend>
-  <depend>rubis_logger_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>rubis_lib</depend>
 </package>
