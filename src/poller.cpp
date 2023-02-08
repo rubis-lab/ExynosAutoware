@@ -32,43 +32,37 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#include "image_transport/single_subscriber_publisher.h"
-#include "image_transport/publisher.h"
+#include <cstdio>
+#include <ros/ros.h>
+#include <boost/lexical_cast.hpp>
+#include "polled_camera/GetPolledImage.h"
 
-namespace image_transport {
-
-SingleSubscriberPublisher::SingleSubscriberPublisher(const std::string& caller_id, const std::string& topic,
-                                                     const GetNumSubscribersFn& num_subscribers_fn,
-                                                     const PublishFn& publish_fn)
-  : caller_id_(caller_id), topic_(topic),
-    num_subscribers_fn_(num_subscribers_fn),
-    publish_fn_(publish_fn)
+int main(int argc, char** argv)
 {
-}
+  ros::init(argc, argv, "poller", ros::init_options::AnonymousName);
+  if (argc < 2) {
+    printf("Usage: %s <Hz> camera:=<namespace> output:=<namespace>\n", argv[0]);
+    return 0;
+  }
+  double hz = boost::lexical_cast<double>(argv[1]);
+  
+  ros::NodeHandle nh;
+  std::string service_name = nh.resolveName("camera") + "/request_image";
+  ros::ServiceClient client = nh.serviceClient<polled_camera::GetPolledImage>(service_name);
 
-std::string SingleSubscriberPublisher::getSubscriberName() const
-{
-  return caller_id_;
-}
+  polled_camera::GetPolledImage::Request req;
+  polled_camera::GetPolledImage::Response rsp;
+  req.response_namespace = nh.resolveName("output");
 
-std::string SingleSubscriberPublisher::getTopic() const
-{
-  return topic_;
+  ros::Rate loop_rate(hz);
+  while (nh.ok()) {
+    if (client.call(req, rsp)) {
+      std::cout << "Timestamp: " << rsp.stamp << std::endl;
+      loop_rate.sleep();
+    }
+    else {
+      ROS_ERROR("Service call failed");
+      client.waitForExistence();
+    }
+  }
 }
-
-uint32_t SingleSubscriberPublisher::getNumSubscribers() const
-{
-  return num_subscribers_fn_();
-}
-
-void SingleSubscriberPublisher::publish(const sensor_msgs::Image& message) const
-{
-  publish_fn_(message);
-}
-
-void SingleSubscriberPublisher::publish(const sensor_msgs::ImageConstPtr& message) const
-{
-  publish_fn_(*message);
-}
-
-} //namespace image_transport

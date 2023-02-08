@@ -1,72 +1,45 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(image_transport)
+project(polled_camera)
 
-find_package(catkin REQUIRED
-  COMPONENTS
-    message_filters
-    pluginlib
-    rosconsole
-    roscpp
-    roslib
-    sensor_msgs
-    rubis_lib
+# generate the server
+find_package(catkin REQUIRED COMPONENTS image_transport message_generation roscpp sensor_msgs std_msgs)
+
+add_service_files(DIRECTORY srv FILES GetPolledImage.srv)
+
+generate_messages(DEPENDENCIES sensor_msgs std_msgs)
+
+# define the project
+catkin_package(CATKIN_DEPENDS image_transport message_runtime roscpp sensor_msgs std_msgs
+               INCLUDE_DIRS include
+               LIBRARIES ${PROJECT_NAME}
 )
 
-find_package(Boost REQUIRED)
 
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  DEPENDS message_filters pluginlib rosconsole roscpp roslib sensor_msgs
+# create some library and exe
+include_directories(include
+                    ${catkin_INCLUDE_DIRS} 
+                    ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+add_library(${PROJECT_NAME} src/publication_server.cpp)
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-# Build libimage_transport
-add_library(${PROJECT_NAME}
-  src/camera_common.cpp
-  src/camera_publisher.cpp
-  src/camera_subscriber.cpp
-  src/image_transport.cpp
-  src/publisher.cpp
-  src/single_subscriber_publisher.cpp
-  src/subscriber.cpp
-)
-add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(${PROJECT_NAME}
-  ${Boost_LIBRARIES}
-  ${catkin_LIBRARIES}
-)
-
-# Build libimage_transport_plugins
-add_library(${PROJECT_NAME}_plugins src/manifest.cpp src/raw_publisher.cpp)
-target_link_libraries(${PROJECT_NAME}_plugins ${PROJECT_NAME})
-
-# Install plugin DLL to ${CATKIN_PACKAGE_LIB_DESTINATION} according to the path in default_plugins.xml
-install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_plugins
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        COMPONENT main
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
-# add two execs
-
-add_executable(list_transports src/list_transports.cpp)
-target_link_libraries(list_transports
-  ${PROJECT_NAME}
-  ${catkin_LIBRARIES}
+add_executable(poller src/poller.cpp)
+add_dependencies(poller ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+target_link_libraries(poller ${PROJECT_NAME}
+                             ${catkin_LIBRARIES}
 )
 
-# add xml file
-install(FILES default_plugins.xml
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-
-install(DIRECTORY include/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
-  PATTERN ".svn" EXCLUDE
+install(TARGETS poller
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

@@ -1,6 +1,6 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package image_transport
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package polled_camera
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.12.0 (2020-04-03)
 -------------------
@@ -15,41 +15,42 @@ Changelog for package image_transport
 
 1.11.13 (2017-11-05)
 --------------------
-* Disable image publisher plugins by name (`#60 <https://github.com/ros-perception/image_common/issues/60>`_)
-  * Disable publisher plugins by name
-  * Now have per publisher blacklist instead of image_transport wide.
-* update to use non deprecated pluginlib macro
-* Extend documentation of `getCameraInfoTopic`
-  Document the fact that the `base_topic` argument must be resolved in order to build the correct camera info topic.
-* Added cv::waitkey(10) for blank popup
-  Without the cv::waitkey(10), it results in a blank popup which crashes/ leads to a black popup. This change corrects that problem.
-  ROS Kinetic, Ubuntu 16.04.3
-* Contributors: Aaditya Saraiya, Lucas Walter, Mikael Arguedas, Thibaud Chupin, Vincent Rabaud
 
 1.11.12 (2017-01-29)
 --------------------
 * Fix CMake of image_transport/tutorial and polled_camera
   Fix loads of problems with the CMakeLists.
-* image_transport/tutorial: Add dependency on generated msg
-  Without this, build fails on Kinetic because ResizedImage.h has not been
-  generated yet.
-* image_transport/tutorial: Add missing catkin_INCLUDE_DIRS
-  Without this, compilation files on Kinetic because ros.h cannot be found.
 * 1.11.11
 * update changelogs
-* Contributors: Martin Guenther, Vincent Rabaud
+* address gcc6 build error in polled_camera
+  With gcc6, compiling fails with `stdlib.h: No such file or directory`,
+  as including '-isystem /usr/include' breaks with gcc6, cf.,
+  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70129.
+  This commit addresses this issue for this package in the same way
+  it was addressed in various other ROS packages. A list of related
+  commits and pull requests is at:
+  https://github.com/ros/rosdistro/issues/12783
+  Signed-off-by: Lukas Bulwahn <lukas.bulwahn@oss.bmw-carit.de>
+* Contributors: Lukas Bulwahn, Martin Guenther, Vincent Rabaud
 
 1.11.11 (2016-09-24)
 --------------------
+* address gcc6 build error in polled_camera
+  With gcc6, compiling fails with `stdlib.h: No such file or directory`,
+  as including '-isystem /usr/include' breaks with gcc6, cf.,
+  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70129.
+  This commit addresses this issue for this package in the same way
+  it was addressed in various other ROS packages. A list of related
+  commits and pull requests is at:
+  https://github.com/ros/rosdistro/issues/12783
+  Signed-off-by: Lukas Bulwahn <lukas.bulwahn@oss.bmw-carit.de>
+* Contributors: Lukas Bulwahn
 
 1.11.10 (2016-01-19)
 --------------------
 
 1.11.9 (2016-01-17)
 -------------------
-* fix linkage in tutorials
-* Use $catkin_EXPORTED_TARGETS
-* Contributors: Jochen Sprickerhof, Vincent Rabaud
 
 1.11.8 (2015-11-29)
 -------------------
@@ -62,22 +63,6 @@ Changelog for package image_transport
 
 1.11.5 (2015-05-14)
 -------------------
-* image_transport: fix CameraSubscriber shutdown (circular shared_ptr ref)
-  CameraSubscriber uses a private boost::shared_ptr to share an impl object
-  between copied instances. In CameraSubscriber::CameraSubscriber(), it
-  handed this shared_ptr to boost::bind() and saved the created wall timer
-  in the impl object, thus creating a circular reference. The impl object
-  was therefore never freed.
-  Fix that by passing a plain pointer to boost::bind().
-* avoid a memory copy for the raw publisher
-* add a way to publish an image with only the data pointer
-* Make function inline to avoid duplicated names when linking statically
-* add plugin examples for the tutorial
-* update instructions for catkin
-* remove uselessly linked library
-  fixes `#28 <https://github.com/ros-perception/image_common/issues/28>`_
-* add a tutorial for image_transport
-* Contributors: Gary Servin, Max Schwarz, Vincent Rabaud
 
 1.11.4 (2014-09-21)
 -------------------
@@ -100,7 +85,6 @@ Changelog for package image_transport
 1.10.4 (2013-07-20 11:42)
 -------------------------
 * add Jack as maintainer
-* update my email address
 * Contributors: Vincent Rabaud
 
 1.10.3 (2013-02-21 05:33)
@@ -114,45 +98,40 @@ Changelog for package image_transport
 
 1.10.0 (2013-01-13)
 -------------------
+* use CATKIN_DEVEL_PREFIX instead of obsolete CATKIN_BUILD_PREFIX
 * fix the urls
-* use the pluginlib script to remove some warnings
+* Missing link flags exposed on OS X
 * added license headers to various cpp and h files
-* Contributors: Aaron Blasdel, Vincent Rabaud
+* Contributors: Aaron Blasdel, Dirk Thomas, Vincent Rabaud, William Woodall
 
 1.9.22 (2012-12-16)
 -------------------
-* get rid of the deprecated class_loader interface
+* replace genmsg by message_generation
 * Contributors: Vincent Rabaud
 
 1.9.21 (2012-12-14)
 -------------------
-* CMakeLists.txt clean up
-* Updated package.xml file(s) to handle new catkin buildtool_depend
-  requirement
-* Contributors: William Woodall, mirzashah
+* Updated package.xml file(s) to handle new catkin buildtool_depend requirement
+* Contributors: mirzashah
 
 1.9.20 (2012-12-04)
 -------------------
 
 1.9.19 (2012-11-08)
 -------------------
-* add the right link libraries
-* Contributors: Vincent Rabaud
 
 1.9.18 (2012-11-06)
 -------------------
-* Isolated plugins into their own library to follow new
-  class_loader/pluginlib guidelines.
 * remove the brief attribute
-* Contributors: Mirza Shah, Vincent Rabaud
+* Contributors: Vincent Rabaud
 
 1.9.17 (2012-10-30 19:32)
 -------------------------
+* comlpy to the new catkin API
+* Contributors: Vincent Rabaud
 
 1.9.16 (2012-10-30 09:10)
 -------------------------
-* add xml file
-* Contributors: Vincent Rabaud
 
 1.9.15 (2012-10-13 08:43)
 -------------------------
@@ -161,6 +140,8 @@ Changelog for package image_transport
 
 1.9.14 (2012-10-13 01:07)
 -------------------------
+* fix typo that resulted in bad installation of include folder
+* Contributors: Vincent Rabaud
 
 1.9.13 (2012-10-06)
 -------------------
@@ -198,6 +179,8 @@ Changelog for package image_transport
 
 1.9.4 (2012-09-12 23:37)
 ------------------------
+* make sure we depend on the server
+* Contributors: Vincent Rabaud
 
 1.9.3 (2012-09-12 20:44)
 ------------------------
@@ -207,11 +190,11 @@ Changelog for package image_transport
 
 1.9.1 (2012-09-07 15:33)
 ------------------------
-* make the libraries public
-* Contributors: Vincent Rabaud
 
 1.9.0 (2012-09-07 13:03)
 ------------------------
 * catkinize for Groovy
-* Initial image_common stack check-in, containing image_transport.
-* Contributors: Vincent Rabaud, gerkey, kwc, mihelich, pmihelich, straszheim, vrabaud
+* polled_camera (rep0104): Changed callback to allow filling
+  status_message field.
+* polled_camera (rep0104): Applied changes to GetPolledImage service.
+* Contributors: Vincent Rabaud, eitan, gerkey, kwc, mihelich

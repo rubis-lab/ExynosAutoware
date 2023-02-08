@@ -2,44 +2,47 @@
 \mainpage
 \htmlinclude manifest.html
 
+NOTE: This package's API is not yet released. It may change from its current form.
+
+\b polled_camera contains a service definition for requesting polled images,
+as well as a C++ server class to simplify publishing polled images to clients.
+
+The protocol for polling images from a camera driver node that supports it is as
+follows:
+ - The camera driver advertises a service call \c \<camera\>/request_image.
+ - The client calls the service, specifying an output namespace in the request.
+ - On receiving a request, the driver captures an image and returns its time stamp
+in the service response.
+ - The \c Image and \c CameraInfo are published to \c \<response_namespace\>/image_raw
+and \c \<response_namespace\>/camera_info, latched.
+ - Clients subscribe to the response topics just like any other camera image stream.
+
 \section codeapi Code API
-When transporting images, you should use image_transport's classes as drop-in
-replacements for ros::Publisher and ros::Subscriber.
-- image_transport::ImageTransport - use this to create a Publisher or Subscriber
-- image_transport::Publisher - manage advertisements for an image topic, using all available transport options
-- image_transport::Subscriber - manage an Image subscription callback using a particular transport
+Use polled_camera::PublicationServer in camera driver nodes (or similar) to
+track client connections and respond to image requests.
 
-Camera drivers publish a "camera_info" sibling topic containing important metadata on how to
-interpret an image for vision applications. image_transport included helper classes to
-publish (image, info) message pairs and re-synchronize them on the client side:
-- image_transport::CameraPublisher - manage advertisements for camera images
-- image_transport::CameraSubscriber - manage a single subscription callback to synchronized image (using any transport) and CameraInfo topics
+There is not currently a matching client class, but receiving polled images
+is identical to subscribing to any other image topic. The only additional
+step is using a ros::ServiceClient to make explicit requests:
 
-For other synchronization or filtering needs, see the low-level filter class:
-- image_transport::SubscriberFilter - a wrapper for image_transport::Subscriber compatible with message_filters
+\code
+#include <ros/ros.h>
+#include <image_transport/image_transport.h>
+#include <polled_camera/GetPolledImage.h>
 
-\subsection writing_plugin Writing a plugin
-If you are an advanced user implementing your own image transport option, you will need to
-implement these base-level interfaces:
-- image_transport::PublisherPlugin
-- image_transport::SubscriberPlugin
+void callback(const sensor_msgs::ImageConstPtr& image, const sensor_msgs::CameraInfoConstPtr& info);
 
-In the common case that all communication between PublisherPlugin and SubscriberPlugin happens
-over a single ROS topic using a transport-specific message type, writing the plugins is vastly
-simplified by using these base classes instead:
-- image_transport::SimplePublisherPlugin - see image_transport::RawPublisher for a trivial example
-- image_transport::SimpleSubscriberPlugin - see image_transport::RawSubscriber for a trivial example
+ros::NodeHandle nh;
+image_transport::ImageTransport it(nh);
 
-\section rosapi ROS API
-
-\subsection pub_sub_rosapi Publishers and Subscribers
-
-Because they encapsulate complicated communication behavior, image_transport publisher
-and subscriber classes have a public ROS API as well as a code API. See the wiki
-documentation for details.
-
-Although image_transport::Publisher may publish many topics, in all code interfaces you should
-use only the name of the "base topic." The image transport classes will figure out the name of
-the dedicated ROS topic to use for the desired transport.
+image_transport::CameraSubscriber sub = it.subscribeCamera("output_ns/image_raw", 1, callback);
+ros::ServiceClient client = nh.serviceClient<polled_camera::GetPolledImage>("my_camera/request_image");
+polled_camera::GetPolledImage srv;
+srv.request.response_namespace = "output_ns";
+if (client.call(srv))
+{
+  ROS_INFO_STREAM("Image captured with timestamp " << srv.response.stamp);
+}
+\endcode
 
 */
